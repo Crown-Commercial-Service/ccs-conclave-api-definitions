@@ -135,7 +135,8 @@ paths:
 
   /evidence/questions/{questionID}:
     parameters:
-      - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Params.yaml#/components/parameters/SelfParam'
+      - $ref: '#/components/parameters/questionID'
+
     get:
       description: Retrieve the terms and conditions required for CaT and if the user has signed up to them.
       tags:
@@ -230,7 +231,7 @@ paths:
       
   /evidence/questions/{questionID}/options:
     parameters:
-      - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Params.yaml#/components/parameters/OrgParam'
+      - $ref: '#/components/parameters/questionID'
 
     put:
       tags:
@@ -303,8 +304,9 @@ paths:
             
   /evidence/questions/{questionID}/options/{optionID}:
     parameters:
-      - $ref: '#/components/parameters/TeamParam'
-      - $ref: '#/components/parameters/TeamMemberParam'       
+      - $ref: '#/components/parameters/questionID'
+      - $ref: '#/components/parameters/optionID'
+            
     delete:
       description: Delete an option that the user can select from to answer a question.
       tags:
@@ -361,7 +363,8 @@ paths:
             
   /evidence/questions/{questionID}/languages:
     parameters:
-      - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Params.yaml#/components/parameters/OrgParam'
+      - $ref: '#/components/parameters/questionID'
+ 
     put:
       tags:
         - Bank Questions      
@@ -406,8 +409,9 @@ paths:
     
   /evidence/questions/{questionID}/options/{optionID}/languages:
     parameters:
-      - $ref: '#/components/parameters/TeamParam'
-      - $ref: '#/components/parameters/TeamMemberParam'
+      - $ref: '#/components/parameters/questionID'
+      - $ref: '#/components/parameters/optionID'
+      
     put:
       tags:
         - Bank Questions      
@@ -520,9 +524,10 @@ paths:
           description: successful operation
       summary: Propose a new ‘Bank’ question.
     
-  /evidence/questionsets/{questionsetID}:
+  /evidence/questionsets/{questionSetID}:
     parameters:
-      - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Params.yaml#/components/parameters/SelfParam'
+      - $ref: '#/components/parameters/questionSetID'
+  
     get:
       description: Gets selected QuestionSet in the ‘Bank’ relevant to the user.
       tags:
@@ -615,7 +620,10 @@ paths:
             - buyer
       summary: Delete bank questionset
       
-  /evidence/questionsets/{questionsetID}/questions:
+  /evidence/questionsets/{questionSetID}/questions:
+    parameters:
+      - $ref: '#/components/parameters/questionSetID'
+      
     get:
       description: Get questions in a questionset relevant to user
       tags:
@@ -643,10 +651,10 @@ paths:
             - buyer
       summary: Get questions in a questionset
       
-  /evidence/questionsets/{questionsetID}/questions/{questionID}:
+  /evidence/questionsets/{questionSetID}/questions/{questionID}:
     parameters:
-      - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Params.yaml#/components/parameters/SelfParam'
-      - $ref: '#/components/parameters/TeamParam'
+      - $ref: '#/components/parameters/questionSetID'
+      - $ref: '#/components/parameters/questionID'
 
     put:
       tags:
@@ -716,11 +724,6 @@ paths:
 
       
   /evidence/events:
-    parameters:
-      - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Params.yaml#/components/parameters/AgreementParam'
-      - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Params.yaml#/components/parameters/LotParam'
-
-
     get:
       description: Get evidence events relevant to the user.
       tags:
@@ -792,7 +795,8 @@ paths:
       
   /evidence/events/{eventID}:
     parameters:
-      - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Params.yaml#/components/parameters/AgreementParam'
+      - $ref: '#/components/parameters/eventID'
+ 
     get:
       description: Get evidence event details
       tags:
@@ -863,7 +867,8 @@ paths:
       
   /evidence/events/{eventID}/questionsets:
     parameters:
-      - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Params.yaml#/components/parameters/AgreementParam'
+      - $ref: '#/components/parameters/eventID'
+     
     get:
       description: Gets questionsets associated with and event.
       tags:
@@ -892,7 +897,11 @@ paths:
       summary: Get event questionsets
       
             
-  /evidence/events/{eventID}/questionsets/{questionsetID}:
+  /evidence/events/{eventID}/questionsets/{questionSetID}:
+    parameters:
+      - $ref: '#/components/parameters/eventID'
+      - $ref: '#/components/parameters/questionSetID'
+   
     put:
       tags:
         - Evidence Event Questionsets      
@@ -960,10 +969,10 @@ paths:
       summary: Delete Event Questionset.
       
       
-  /evidence/events/{eventID}/questionsets/{questionsetID}/questions:
+  /evidence/events/{eventID}/questionsets/{questionSetID}/questions:
     parameters:
-      - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Params.yaml#/components/parameters/SelfParam'
-      - $ref: '#/components/parameters/TeamParam'
+      - $ref: '#/components/parameters/eventID'
+      - $ref: '#/components/parameters/questionSetID'
       
     get:
       description: Get all questions in a questionset belonging to an evidence event.
@@ -1025,10 +1034,11 @@ paths:
             - buyer
       summary: Add question to Questionset
       
-  /evidence/events/{eventID}/questionsets/{questionsetID}/questions/{questionID}:
+  /evidence/events/{eventID}/questionsets/{questionSetID}/questions/{questionID}:
     parameters:
-      - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Params.yaml#/components/parameters/SelfParam'
-      - $ref: '#/components/parameters/TeamParam'
+      - $ref: '#/components/parameters/eventID'
+      - $ref: '#/components/parameters/questionSetID'
+      - $ref: '#/components/parameters/questionID'
       
     put:
       description: Update a question in a questionset in an evidence event
@@ -1094,11 +1104,11 @@ paths:
             - buyer
       summary: Delete Event Questionset.
       
-  /evidence/events/{eventID}/questionsets/{questionsetID}/questions/{questionID}/options:
+  /evidence/events/{eventID}/questionsets/{questionSetID}/questions/{questionID}/options:
     parameters:
-      - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Params.yaml#/components/parameters/SelfParam'
-      - $ref: '#/components/parameters/TeamParam'
-      - $ref: '#/components/parameters/TeamMemberParam'
+      - $ref: '#/components/parameters/eventID'
+      - $ref: '#/components/parameters/questionSetID'
+      - $ref: '#/components/parameters/questionID'
       
     put:
       description: Add an response option for a Single Select or Muti-Select question for an event.
@@ -1168,10 +1178,13 @@ paths:
         - OAuth2:
             - buyer
             
-  /evidence/events/{eventID}/questionsets/{questionsetID}/questions/{questionID}/options/{optionID}:
+  /evidence/events/{eventID}/questionsets/{questionSetID}/questions/{questionID}/options/{optionID}:
     parameters:
-      - $ref: '#/components/parameters/TeamParam'
-      - $ref: '#/components/parameters/TeamMemberParam'       
+      - $ref: '#/components/parameters/eventID'
+      - $ref: '#/components/parameters/questionSetID'
+      - $ref: '#/components/parameters/questionID'
+      - $ref: '#/components/parameters/optionID'
+            
     delete:
       description: Delete an option that the user can select from to answer a question.
       tags:
@@ -1198,9 +1211,13 @@ paths:
 
       
             
-  /evidence/events/{eventID}/questionsets/{questionsetID}/questions/{questionID}/languages/{languageID}:
+  /evidence/events/{eventID}/questionsets/{questionSetID}/questions/{questionID}/languages/{languageID}:
     parameters:
-      - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Params.yaml#/components/parameters/OrgParam'
+      - $ref: '#/components/parameters/eventID'
+      - $ref: '#/components/parameters/questionSetID'
+      - $ref: '#/components/parameters/questionID'
+      - $ref: '#/components/parameters/languageID'
+       
     put:
       tags:
         - Evidence Event Questions      
@@ -1243,10 +1260,14 @@ paths:
           description: successful operation
 
     
-  /evidence/events/{eventID}/questionsets/{questionsetID}/questions/{questionID}/options/{optionID}/languages/{languageID}:
+  /evidence/events/{eventID}/questionsets/{questionSetID}/questions/{questionID}/options/{optionID}/languages/{languageID}:
     parameters:
-      - $ref: '#/components/parameters/TeamParam'
-      - $ref: '#/components/parameters/TeamMemberParam'
+      - $ref: '#/components/parameters/eventID'
+      - $ref: '#/components/parameters/questionSetID'
+      - $ref: '#/components/parameters/questionID'
+      - $ref: '#/components/parameters/optionID'
+      - $ref: '#/components/parameters/languageID'
+      
     put:
       tags:
         - Evidence Event Questions      
@@ -1289,12 +1310,12 @@ paths:
           description: successful operation
       
 
-  /evidence/events/{eventID}/questionsets/{QuestionSetID}/questions/{questionID}/responses/{SupplierID}:     
+  /evidence/events/{eventID}/questionsets/{questionSetID}/questions/{questionID}/responses/{supplierID}:     
     parameters:
-      - $ref: '#/components/parameters/TeamParam'
-      - $ref: '#/components/parameters/TeamMemberParam'
-      - $ref: '#/components/parameters/TeamParam2'
-      - $ref: '#/components/parameters/TeamMemberParam2'
+      - $ref: '#/components/parameters/eventID'
+      - $ref: '#/components/parameters/questionSetID'
+      - $ref: '#/components/parameters/questionID'
+      - $ref: '#/components/parameters/supplierID'
       
     put:
       tags:
@@ -1362,7 +1383,7 @@ paths:
       
   /evidence/events/{eventID}/responders:
     parameters:
-      - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Params.yaml#/components/parameters/SelfParam'
+      - $ref: '#/components/parameters/eventID'
       
     get:
       description: Get all suppliers who have responded to your event
@@ -1391,11 +1412,11 @@ paths:
             - buyer
       summary: Get Responders
       
-  /evidence/events/{eventID}/questionset/{questionsetID}/questions/{questionID}/responses:
+  /evidence/events/{eventID}/questionset/{questionSetID}/questions/{questionID}/responses:
     parameters:
-      - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Params.yaml#/components/parameters/SelfParam'
-      - $ref: '#/components/parameters/TeamParam'
-      - $ref: '#/components/parameters/TeamParam2'
+      - $ref: '#/components/parameters/eventID'
+      - $ref: '#/components/parameters/questionSetID'
+      - $ref: '#/components/parameters/questionID'
       
     get:
       description: Get responded supplier ID and names for the given question.
@@ -1424,12 +1445,12 @@ paths:
             - buyer
       summary: Get Question Responses
       
-  /evidence/events/{eventID}/questionsets/{QuestionSetID}/questions/{questionID}/responses/{SupplierID}/documents:     
+  /evidence/events/{eventID}/questionsets/{questionSetID}/questions/{questionID}/responses/{supplierID}/documents:     
     parameters:
-      - $ref: '#/components/parameters/TeamParam'
-      - $ref: '#/components/parameters/TeamMemberParam'
-      - $ref: '#/components/parameters/TeamParam2'
-      - $ref: '#/components/parameters/TeamMemberParam2'
+      - $ref: '#/components/parameters/eventID'
+      - $ref: '#/components/parameters/questionSetID'
+      - $ref: '#/components/parameters/questionID'
+      - $ref: '#/components/parameters/supplierID'
       
     get:
       description: Get responded supplier ID and names for the given question.
@@ -1459,12 +1480,13 @@ paths:
             - buyer
       summary: Get Response Documents
       
-  /evidence/events/{eventID}/questionsets/{QuestionSetID}/questions/{questionID}/responses/{SupplierID}/documents/{documentID}:     
+  /evidence/events/{eventID}/questionsets/{questionSetID}/questions/{questionID}/responses/{supplierID}/documents/{documentID}:     
     parameters:
-      - $ref: '#/components/parameters/TeamParam'
-      - $ref: '#/components/parameters/TeamMemberParam'
-      - $ref: '#/components/parameters/TeamParam2'
-      - $ref: '#/components/parameters/TeamMemberParam2'
+      - $ref: '#/components/parameters/eventID'
+      - $ref: '#/components/parameters/questionSetID'
+      - $ref: '#/components/parameters/questionID'
+      - $ref: '#/components/parameters/supplierID'
+      - $ref: '#/components/parameters/documentID'
       
     get:
       description: Get responded supplier ID and names for the given question.
@@ -1565,60 +1587,60 @@ components:
 
   parameters:
     
-    TeamParam:
-      name: teamID
+    eventID:
+      name: eventID
       in: path
       required: true
-      description: Team ID
+      description: Event ID
       schema:
         $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Schema.yaml#/components/schemas/GenericID'
         
-    TeamMemberParam:
-      name: teamMemberID
+    questionSetID:
+      name: questionSetID
       in: path
       required: true
-      description: Team member ID
+      description: Questionset ID
       schema:
         $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Schema.yaml#/components/schemas/GenericID'
    
         
-    GMParam:
-      name: GuidedMatchHistoryID
-      in: query
-      required: true
-      description: Guided Match ID
-      schema:
-        $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Schema.yaml#/components/schemas/GenericID'
-        
-    FMParam:
-      name: FMID
-      in: query
-      required: true
-      description: Facilities Management Transfer ID
-      schema:
-        $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Schema.yaml#/components/schemas/GenericID'
-        
-    ProcurementParam:
-      name: procID
+    questionID:
+      name: questionID
       in: path
       required: true
-      description: Procurement Project ID
+      description: Question ID
+      schema:
+        $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Schema.yaml#/components/schemas/GenericID'
+        
+    supplierID:
+      name: supplierID
+      in: path
+      required: true
+      description: Supplier ID
+      schema:
+        $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Schema.yaml#/components/schemas/GenericID'
+        
+    languageID:
+      name: languageID
+      in: path
+      required: true
+      description: Language ID
       schema:
         $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Schema.yaml#/components/schemas/ProcurementID'
         
-    EventParam:
-      name: eventID
+    optionID:
+      name: optionID
       in: path
       required: true
-      description: Procurement Event ID
+      description: Option ID
       schema:
         $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Schema.yaml#/components/schemas/GenericID'
         
-    CriterionParam:
-      name: criterionID
+    documentID:
+      name: documentID
       in: path
       required: true
-      description: Criterion ID
+      description: Document ID
       schema:
         $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Schema.yaml#/components/schemas/GenericID'
         
