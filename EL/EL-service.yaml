@@ -34,7 +34,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OCDS_Standards/CCS-OCDS_Schema.yaml#/components/schemas/Release'        
+                  $ref: '#/components/schemas/QuestionSummary'        
           description: "Accepted"
         '403':
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/403Forbidden'
@@ -57,7 +57,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SalesforceProjectTender'
+              $ref: '#/components/schemas/QuestionDetail'
       responses:
         '201':
           description: Success (for object creation). Its information is available in the
@@ -66,9 +66,7 @@ paths:
           content:
             application/json:
               schema:
-                oneOf:
-                  - $ref: '#/components/schemas/DraftProcurementProject'
-                  - $ref: '#/components/schemas/SalesforceProjectTender200Response'                
+                $ref: '#/components/schemas/QuestionSummary'               
         '400':
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/400InvalidRequest'
         '401':
@@ -119,7 +117,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OCDS_Standards/CCS-OCDS_Schema.yaml#/components/schemas/Release'        
+                  $ref: '#/components/schemas/QuestionType'        
           description: "Accepted"
         '403':
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/403Forbidden'
@@ -163,7 +161,7 @@ paths:
         - openID:
             - read
             - write
-      summary: Ts and Cs
+      summary: Gets Question Details
       
     put:
       tags:
@@ -174,7 +172,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SalesforceProjectTender'
+              $ref: '#/components/schemas/QuestionDetail'
       responses:
         '201':
           description: Success (for object creation). Its information is available in the
@@ -183,9 +181,8 @@ paths:
           content:
             application/json:
               schema:
-                oneOf:
-                  - $ref: '#/components/schemas/DraftProcurementProject'
-                  - $ref: '#/components/schemas/SalesforceProjectTender200Response'                
+                $ref: '#/components/schemas/QuestionSummary'
+                              
         '400':
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/400InvalidRequest'
         '401':
@@ -242,7 +239,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SalesforceProjectTender'
+              $ref: '#/components/schemas/QuestionOption'
       responses:
         '201':
           description: Success (for object creation). Its information is available in the
@@ -251,9 +248,7 @@ paths:
           content:
             application/json:
               schema:
-                oneOf:
-                  - $ref: '#/components/schemas/DraftProcurementProject'
-                  - $ref: '#/components/schemas/SalesforceProjectTender200Response'                
+                $ref: '#/components/schemas/QuestionOption'              
         '400':
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/400InvalidRequest'
         '401':
@@ -286,7 +281,9 @@ paths:
           content:
             application/vnd.api+json:
               schema:
-                $ref: '#/components/schemas/TeamList'
+                type: array
+                items:
+                  $ref: '#/components/schemas/QuestionOption'
         '401':
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
         '403':
@@ -345,7 +342,7 @@ paths:
           content:
             application/vnd.api+json:
               schema:
-                $ref: '#/components/schemas/TeamList'
+                $ref: '#/components/schemas/LanguageList'
         '401':
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
         '403':
@@ -375,7 +372,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SalesforceProjectTender'
+              $ref: '#/components/schemas/Translation'
       responses:
         '201':
           description: Success (for object creation). Its information is available in the
@@ -384,9 +381,7 @@ paths:
           content:
             application/json:
               schema:
-                oneOf:
-                  - $ref: '#/components/schemas/DraftProcurementProject'
-                  - $ref: '#/components/schemas/SalesforceProjectTender200Response'                
+                $ref: '#/components/schemas/Translation'                
         '400':
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/400InvalidRequest'
         '401':
@@ -422,7 +417,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SalesforceProjectTender'
+              $ref: '#/components/schemas/Translation'
       responses:
         '201':
           description: Success (for object creation). Its information is available in the
@@ -431,9 +426,7 @@ paths:
           content:
             application/json:
               schema:
-                oneOf:
-                  - $ref: '#/components/schemas/DraftProcurementProject'
-                  - $ref: '#/components/schemas/SalesforceProjectTender200Response'                
+                $ref: '#/components/schemas/Translation'                
         '400':
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/400InvalidRequest'
         '401':
@@ -468,7 +461,9 @@ paths:
           content:
             application/vnd.api+json:
               schema:
-                $ref: '#/components/schemas/TeamMemberList'
+                type: array
+                items:
+                  $ref: '#/components/schemas/QuestionSummary'
         '401':
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
         '403':
@@ -492,7 +487,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SalesforceProjectTender'
+              $ref: '#/components/schemas/QuestionSet'
       responses:
         '201':
           description: Success (for object creation). Its information is available in the
@@ -501,9 +496,7 @@ paths:
           content:
             application/json:
               schema:
-                oneOf:
-                  - $ref: '#/components/schemas/DraftProcurementProject'
-                  - $ref: '#/components/schemas/SalesforceProjectTender200Response'                
+                 $ref: '#/components/schemas/QuestionSet'               
         '400':
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/400InvalidRequest'
         '401':
@@ -539,7 +532,7 @@ paths:
           content:
             application/vnd.api+json:
               schema:
-                $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Schema.yaml#/components/schemas/TsAndCs'
+                $ref: '#/components/schemas/QuestionSet'
         '401':
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
         '403':
@@ -565,7 +558,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SalesforceProjectTender'
+              $ref: '#/components/schemas/QuestionSet'
       responses:
         '201':
           description: Success (for object creation). Its information is available in the
@@ -574,9 +567,7 @@ paths:
           content:
             application/json:
               schema:
-                oneOf:
-                  - $ref: '#/components/schemas/DraftProcurementProject'
-                  - $ref: '#/components/schemas/SalesforceProjectTender200Response'                
+                 $ref: '#/components/schemas/QuestionSet'                
         '400':
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/400InvalidRequest'
         '401':
@@ -665,7 +656,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SalesforceProjectTender'
+               $ref: '#/components/schemas/QuestionDetail'
       responses:
         '201':
           description: Success (for object creation). Its information is available in the
@@ -674,9 +665,7 @@ paths:
           content:
             application/json:
               schema:
-                oneOf:
-                  - $ref: '#/components/schemas/DraftProcurementProject'
-                  - $ref: '#/components/schemas/SalesforceProjectTender200Response'                
+                 $ref: '#/components/schemas/QuestionSummary'                
         '400':
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/400InvalidRequest'
         '401':
@@ -760,7 +749,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SalesforceProjectTender'
+              $ref: '#/components/schemas/Event'
       responses:
         '201':
           description: Success (for object creation). Its information is available in the
@@ -769,9 +758,7 @@ paths:
           content:
             application/json:
               schema:
-                oneOf:
-                  - $ref: '#/components/schemas/DraftProcurementProject'
-                  - $ref: '#/components/schemas/SalesforceProjectTender200Response'                
+                $ref: '#/components/schemas/Event'                
         '400':
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/400InvalidRequest'
         '401':
@@ -808,7 +795,7 @@ paths:
           content:
             application/vnd.api+json:
               schema:
-                $ref: '#/components/schemas/DefaultName'
+                $ref: '#/components/schemas/Event'
         '401':
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
         '403':
@@ -833,7 +820,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SalesforceProjectTender'
+              $ref: '#/components/schemas/Event'
       responses:
         '201':
           description: Success (for object creation). Its information is available in the
@@ -842,9 +829,7 @@ paths:
           content:
             application/json:
               schema:
-                oneOf:
-                  - $ref: '#/components/schemas/DraftProcurementProject'
-                  - $ref: '#/components/schemas/SalesforceProjectTender200Response'                
+                $ref: '#/components/schemas/Event'               
         '400':
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/400InvalidRequest'
         '401':
@@ -880,7 +865,9 @@ paths:
           content:
             application/vnd.api+json:
               schema:
-                $ref: '#/components/schemas/DefaultName'
+                type: array
+                items:
+                    $ref: '#/components/schemas/QuestionSet'
         '401':
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
         '403':
@@ -913,7 +900,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SalesforceProjectTender'
+              $ref: '#/components/schemas/QuestionSet'
       responses:
         '201':
           description: Success (for object creation). Its information is available in the
@@ -922,9 +909,7 @@ paths:
           content:
             application/json:
               schema:
-                oneOf:
-                  - $ref: '#/components/schemas/DraftProcurementProject'
-                  - $ref: '#/components/schemas/SalesforceProjectTender200Response'                
+                $ref: '#/components/schemas/QuestionSet'               
         '400':
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/400InvalidRequest'
         '401':
@@ -986,7 +971,9 @@ paths:
           content:
             application/vnd.api+json:
               schema:
-                $ref: '#/components/schemas/DefaultName'
+                type: array
+                items:
+                  $ref: '#/components/schemas/QuestionSummary'
         '401':
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
         '403':
@@ -1011,14 +998,14 @@ paths:
         content:
           application/vnd.api+json:
             schema:
-              $ref: '#/components/schemas/AgreementDetails'
+              $ref: '#/components/schemas/QuestionDetail'
       responses:
         '200':
           description: ok
           content:
             application/vnd.api+json:
               schema:
-                $ref: '#/components/schemas/DraftProcurementProject'
+                $ref: '#/components/schemas/QuestionSummary'
         '401':
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
         '403':
@@ -1049,7 +1036,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SalesforceProjectTender'
+              $ref: '#/components/schemas/QuestionDetail'
       responses:
         '201':
           description: Success (for object creation). Its information is available in the
@@ -1058,9 +1045,7 @@ paths:
           content:
             application/json:
               schema:
-                oneOf:
-                  - $ref: '#/components/schemas/DraftProcurementProject'
-                  - $ref: '#/components/schemas/SalesforceProjectTender200Response'                
+                $ref: '#/components/schemas/QuestionSummary'               
         '400':
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/400InvalidRequest'
         '401':
@@ -1119,7 +1104,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SalesforceProjectTender'
+              $ref: '#/components/schemas/QuestionOption'
       responses:
         '201':
           description: Success (for object creation). Its information is available in the
@@ -1128,9 +1113,7 @@ paths:
           content:
             application/json:
               schema:
-                oneOf:
-                  - $ref: '#/components/schemas/DraftProcurementProject'
-                  - $ref: '#/components/schemas/SalesforceProjectTender200Response'                
+                $ref: '#/components/schemas/QuestionOption'                
         '400':
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/400InvalidRequest'
         '401':
@@ -1162,7 +1145,9 @@ paths:
           content:
             application/vnd.api+json:
               schema:
-                $ref: '#/components/schemas/TeamList'
+                type: array
+                items:
+                  $ref: '#/components/schemas/QuestionOption'
         '401':
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
         '403':
@@ -1228,7 +1213,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SalesforceProjectTender'
+              $ref: '#/components/schemas/Translation'
       responses:
         '201':
           description: Success (for object creation). Its information is available in the
@@ -1237,9 +1222,7 @@ paths:
           content:
             application/json:
               schema:
-                oneOf:
-                  - $ref: '#/components/schemas/DraftProcurementProject'
-                  - $ref: '#/components/schemas/SalesforceProjectTender200Response'                
+                $ref: '#/components/schemas/Translation'                
         '400':
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/400InvalidRequest'
         '401':
@@ -1278,7 +1261,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SalesforceProjectTender'
+              $ref: '#/components/schemas/Translation'
       responses:
         '201':
           description: Success (for object creation). Its information is available in the
@@ -1287,9 +1270,7 @@ paths:
           content:
             application/json:
               schema:
-                oneOf:
-                  - $ref: '#/components/schemas/DraftProcurementProject'
-                  - $ref: '#/components/schemas/SalesforceProjectTender200Response'                
+                $ref: '#/components/schemas/Translation'               
         '400':
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/400InvalidRequest'
         '401':
@@ -1327,7 +1308,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SalesforceProjectTender'
+              $ref: '#/components/schemas/Response'
       responses:
         '201':
           description: Success (for object creation). Its information is available in the
@@ -1336,9 +1317,7 @@ paths:
           content:
             application/json:
               schema:
-                oneOf:
-                  - $ref: '#/components/schemas/DraftProcurementProject'
-                  - $ref: '#/components/schemas/SalesforceProjectTender200Response'                
+                $ref: '#/components/schemas/Response'                
         '400':
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/400InvalidRequest'
         '401':
@@ -1527,7 +1506,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SalesforceProjectTender'
+              $ref: '#/components/schemas/Document'
       responses:
         '201':
           description: Success (for object creation). Its information is available in the
@@ -1536,9 +1515,7 @@ paths:
           content:
             application/json:
               schema:
-                oneOf:
-                  - $ref: '#/components/schemas/DraftProcurementProject'
-                  - $ref: '#/components/schemas/SalesforceProjectTender200Response'                
+                $ref: '#/components/schemas/Document'                
         '400':
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/400InvalidRequest'
         '401':
@@ -1644,328 +1621,8 @@ components:
       schema:
         $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Schema.yaml#/components/schemas/GenericID'
         
-    GroupParam:
-      name: groupID
-      in: path
-      required: true
-      description: Question Group ID
-      schema:
-        $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Schema.yaml#/components/schemas/GenericID'
-    
-        
-    NeedParam:
-      name: questionID
-      in: path
-      required: true
-      description: Procurement Need ID
-      schema:
-        $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Schema.yaml#/components/schemas/GenericID'
-
-        
-    ResponseParam:
-      name: responseID
-      in: path
-      required: true
-      description: Response ID to a Procurement Need
-      schema:
-        $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Schema.yaml#/components/schemas/GenericID'
-
+ 
   schemas:
-  
-    SalesforceProjectTender:
-      type: object
-      required:
-        - subject
-        - procurementReference
-        - rfx
-      properties:
-        tenderReferenceCode:
-          type: string
-          example: project_1078
-        subject:
-          type: string
-          example: Project for Provision of Face Masks
-        procurementReference:
-          type: string
-          example: '324233324'
-        rfx:
-          $ref: '#/components/schemas/SalesforceRfx'
-          
-    SalesforceRfx:
-      title: Rfx
-      type: object
-      required:
-        - shortDescription
-        - value
-        - publishDate
-        - closeDate
-        - procurementRoute
-      properties:
-        shortDescription:
-          type: string
-          example: RFQ for Provision of PPE
-        rfiFlag:
-          type: string
-          example: "1"
-        value:
-          type: string
-          example: 0
-        templateReferenceCode:
-          type: string
-          example: itt_543
-        qualEnvStatus:
-          type: string
-          example: 0
-        techEnvStatus:
-          type: string
-          example: 1
-        commEnvStatus:
-          type: string
-          example: 0
-        publishDate:
-          type: string
-          example: '2021-01-28T12:00:00.000+00:00'
-        closeDate:
-          type: string
-          example: '2021-02-27T12:00:00.000+00:00'
-        visibilityEGComments:
-          type: string
-          example: 1
-        rankingStrategy:
-          type: string
-          example: BEST_TECHNICAL_SCORE
-        procurementRoute:
-          type: string
-          example: Call Off (Competition)
-        frameworkName:
-          type: string
-          example: TT3242
-        frameworkLotNumber:
-          type: string
-          example: Lot 1
-        frameworkRMNumber:
-          type: string
-          example: 12345
-          
-    SalesforceProjectTender200Response:
-      type: object
-      properties:
-        tenderReferenceCode:
-          type: string
-          description: project code (project id)
-          example: project_1063
-        rfxReferenceCode:
-          type: string
-          description: the itt code (tender id)
-          example: itt_586          
-    TeamID:
-      type: number
-      format: integer
-      example: 1234
-      readOnly: true
-      
-    TeamMemberID:
-      type: number
-      format: integer
-      example: 1234
-
-    TeamList:
-      type: array
-      items:
-        $ref: '#/components/schemas/Team'
-        
-    Team:
-      type: object
-      description: Team who work together on bids or procurements
-      required:
-        - name
-      properties: 
-        id:
-          description: 'Unique Identifier for the team.'
-          readOnly: true
-          allOf: 
-            - $ref: '#/components/schemas/TeamID'
-          
-        organisation:  
-          description: Organisation that has defined the team
-          allOf: 
-            - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Schema.yaml#/components/schemas/OrgID'
-        name:  
-          type: string
-          default: UAH
-          description: Name given to the team within the organisation
-          example: Procurment Team A
-          
-    TeamMemberList:
-      type: array
-      items:
-        $ref: '#/components/schemas/TeamMember'
-        
-    TeamMember:
-      type: object
-      description: Team who work together on bids or procurements
-      required:
-        - id
-        - name
-      properties: 
-        id:  
-          type: string
-          readOnly: true
-          format: uuid
-          description: 'ID of the team member'
-          example: 222
-        contact:
-          allOf:
-            - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OCDS_Standards/CCS-OCDS_Schema.yaml#/components/schemas/ContactPoint'
-          properties:
-            name:
-              description: Name of the tream member
-            email:
-              description: eMail address of the tream member
-            telephone:
-              description: Telephone number of the tream member
-            faxNumber:
-              description: Fax number of the tream member
-            url:
-              description: URL of the tream member
-              
-    AgreementDetails:
-      type: object
-      properties:
-        agreementID:
-          allOf:
-            - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Schema.yaml#/components/schemas/AgreementID'
-          readOnly: false
-        lotID:
-          allOf:
-            - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Schema.yaml#/components/schemas/LotID'
-          readOnly: false
-          
-    ExtendCriteria:
-      description: >-
-        Data required to extend the period for tender submissions. It must not exceed the orginal extention limit defined on a tender.
-        type: object
-      properties:
-        endDate:
-            title: End date
-            description: >-
-              The new end date for the period. 
-            type: string
-            nullable: true
-            format: date-time
-            
-            
-    ProjectPackageSummary:
-      title: Project Package Summary
-      description: >-
-        The project package contains a list of Event records within a single Procurement Project along with some publishing metadata. The Event Records pull together all the releases of a procurement process
-        under a single Open Contracting ID and compile them into the latest version of the information along with the history of any data changes. This summary shows the primary fields of the project package
-        and supporting data including the active event. Following the URI will provide the project details in OIDC format.
-      type: object
-      properties:
-        uri:
-          title: Package identifier
-          description: The URI of this package that identifies it uniquely in the world.
-          type: string
-          example: 'https://www.crowncommercial.gov.uk/tenders/projects/{ProcID}'
-          format: uri
-        #version:
-        #  title: OCDS schema version
-        #  description: 'The version of the OCDS schema used in this package, expressed as major.minor For example: 1.0 or 1.1'
-        #  type: string
-        #  pattern: ^(\d+\.)(\d+)$
-        #  example: '1.0'
-        #license:
-        #  title: License
-        #  description: 'A link to the license that applies to the data in this package. A Public Domain Dedication or [Open Definition Conformant](http://opendefinition.org/licenses/) license is recommended. The canonical URI of the license should be used. Documents linked from this file may be under other license conditions.'
-        #  nullable: true
-        #  type: string
-        #  format: uri
-        #publicationPolicy:
-        #  title: Publication policy
-        #  description: A link to a document describing the publishers publication policy.
-        #  nullable: true
-        #  type: string
-        #  format: uri
-        #  example: 'https://www.crowncommercial.gov.uk/agreements/publicationPolicy'
-        publishedDate:
-          title: Published date
-          description: 'The date that this package was published. If this package is generated ''on demand'', this date should reflect the date of the last change to the underlying contents of the package.'
-          type: string
-          format: date-time
-          example: 01/01/2021
-        procurementID:
-          type: string
-        projectName:
-          type: string
-        supportId:
-          type: string
-        activeEvent:
-          type: object
-          properties:
-            eventId: 
-              type: string
-            eventSuppordId: 
-              type: string
-            eventType:
-              type: string
-            eventStage:
-              type: string
-              
-    ProjectPackage:
-      allOf:
-        - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OCDS_Standards/CCS-OCDS_Schema.yaml#/components/schemas/RecordPackage'
-      title: Project Package
-      description: The record package contains a list of Event records within a single procurement project along with some publishing metadata. The Event Records pull together all the releases of a procurement under a single Open Contracting ID and compile them into the latest version of the information along with the history of any data changes.
-      type: object
-      properties:
-        uri:
-          title: Package identifier
-          description: The URI of this package that identifies it uniquely in the world.
-          type: string
-          example: 'https://www.crowncommercial.gov.uk/tenders/projects/{ProcID}'
-          format: uri
-              
-              
-    
-    TerminationTypes:
-      title: Termination Options
-      description: >-
-        Ways to terminate a tender. There are several types-
-
-          * cancelled
-          * unsucessful
-          * complete
-          * withdrawn
-      type: array
-      items:
-        $ref: '#/components/schemas/TerminationType'
-      example: [
-        "cancelled",
-        "unsuccessful",
-        "complete",
-        "withdrawn"
-        ]
-        
-          
-    TerminationType:
-      allOf:
-        - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OCDS_Standards/CCS-OCDS_Schema.yaml#/components/schemas/TenderStatus'
-      title: Termination Type
-      description: >-
-        Subset of the codes in [tenderStatus](https://standard.open-contracting.org/1.1/en/schema/codelists/#tender-status) codelist.
-        This subset are those used to terminate an RFx.
-      type: object
-      properties:
-        terminationType:
-          type: string
-          enum:
-            - cancelled
-            - unsuccessful
-            - complete
-            - withdrawn.
-      example: "cancelled"
-        
     
         
     EventTypes:
@@ -1998,7 +1655,23 @@ components:
           - EOI
           - RFI
           - RFP
-        
+          
+    Event:
+      description: >-
+        Generic term for an event put out to the market. Each is an optional procurement step in the procurement process. This casll shows the current status of each in the procurement process.
+      type: array
+      items:
+        type: object
+        properties:
+          projectID: 
+            type: string
+            example: 00002468
+            description: project_1055 mapped to CaT (project ID) 00002468
+          eventID: 
+            type: string
+            example: 00013579
+            description: itt_2468 mapped to CaT (eventID) 00013579 
+            
     EventStatus:
       description: >-
         Generic term for an event put out to the market. Each is an optional procurement step in the procurement process. This casll shows the current status of each in the procurement process.
@@ -2033,23 +1706,20 @@ components:
             allOf:
               - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OCDS_Standards/CCS-OCDS_Schema.yaml#/components/schemas/TenderStatus'
                   
-    ProjectTerminationType:
-      #allOf:
-      #  - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OCDS_Standards/CCS-OCDS_Schema.yaml#/components/schemas/TenderStatus'
-      title: Project Termination Options
-      description: >-
-        Subset of the codes in [tenderStatus](https://standard.open-contracting.org/1.1/en/schema/codelists/#tender-status) codelist.
-        These are the statuses which the user can close the project. If the response is null then the project cannot be closed.
-      type: array
-      items:
-        type: string
-        enum:
-          - cancelled
-          - unsuccessful
-          - complete
-          - withdrawn.
+    LanguageList:
+      $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OCDS_Standards/CCS-OCDS_CodeLists.yaml#/components/schemas/Language'
 
-              
+    Translation:      
+      type: object
+      properties:
+        languageID:
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OCDS_Standards/CCS-OCDS_CodeLists.yaml#/components/schemas/Language'
+        languageName:
+          type: string
+        defaultName:
+          $ref: '#/components/schemas/DefaultName' 
+          
+             
     DraftProcurementProject:
       type: object
       properties:
@@ -2103,6 +1773,9 @@ components:
         description: 
           type: string 
           
+    QuestionType:
+      $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/OCDS/OCDS_CodeLists_Ext.yaml#/components/schemas/DataType'
+          
     QuestionSummary:
       description: >-
         This is summary of the questions within a Question Group
@@ -2117,7 +1790,7 @@ components:
         dataType:
           type: string         
  
-    Question:
+    QuestionDetail:
       allOf:
         - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OCDS_Standards/CCS-OCDS_Schema.yaml#/components/schemas/Requirement'
       #description: >-
@@ -2127,7 +1800,47 @@ components:
       #  type: object
       #  properties:
       #    id: 
-      #      type: string       
+      #      type: string      
+      
+    QuestionOption:
+      description: >-
+        This is an allowable response for a single or multi-select question
+      type: object
+      properties:
+        id: 
+          type: string
+        title: 
+          type: string 
+        description: 
+          type: string
+          
+    QuestionSet:
+      description: >-
+        This is the details of a questionset which is a container for questions.
+      type: object
+      properties:
+        id: 
+          type: string
+        title: 
+          type: string 
+        description: 
+          type: string
+          
+    Response:
+      description: >-
+        This is the details of a questionset which is a container for questions.
+      type: object
+      properties:
+        id: 
+          type: string
+          
+    Document:
+      description: >-
+        This is the details of a questionset which is a container for questions.
+      type: object
+      properties:
+        id: 
+          type: string
                     
   securitySchemes:
     openID:

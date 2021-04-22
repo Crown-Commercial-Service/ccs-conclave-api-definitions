@@ -1,0 +1,98 @@
+openapi: 3.0.1
+
+info:
+  title: Contact Service API
+  description: Optional multiline or single-line description in [CommonMark](http://commonmark.org/help/) or HTML.
+  version: 1.0
+servers:
+  - url: http://api.example.com/v1
+    description: Optional server description, e.g. Main (production) server
+  - url: http://staging-api.example.com
+    description: Optional server description, e.g. Internal staging server for testing
+    
+paths:
+  /contacts:
+    get:
+      tags:
+        - Configuration
+      summary: Allows a user to get contact reasons
+      description: "Sample request:\r\n            \r\n    GET configurations/contact-reasons"
+      responses:
+        '200':
+          description: Ok
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ContactReasonInfo'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ContactReasonInfo'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ContactReasonInfo'
+        '401':
+          description: Unauthorised
+          
+
+  /contacts/{contactID}
+    get:
+      tags:
+        - Configuration
+      summary: Allows a user to get contact reasons
+      description: "Sample request:\r\n            \r\n    GET configurations/contact-reasons"
+      responses:
+        '200':
+          description: Ok
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ContactReasonInfo'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ContactReasonInfo'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ContactReasonInfo'
+        '401':
+          description: Unauthorised
+          
+          
+
+  securitySchemes:
+    ApiKey:
+      type: apiKey
+      name: X-API-KEY
+      in: header
+      
+security:
+  - ApiKey: []
+  
+    securitySchemes:
+    openID:
+      type: openIdConnect
+      openIdConnectUrl: 'https://accounts.google.com/.well-known/openid-configuration'
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: 'https://accounts.google.com/o/oauth2/v2/auth'
+          tokenUrl: 'https://oauth2.googleapis.com/token'
+          scopes:
+            openid: Standard scope
+            email: email
+            profile: profile
+            supplier: Grants access to act as a supplier
+            buyer: Grants access to act as a buyer
+            admin: Grants access to admin operations
