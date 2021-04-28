@@ -3,7 +3,7 @@ openapi: 3.0.1
 info:
   title: Organisation Service API
   description: Optional multiline or single-line description in [CommonMark](http://commonmark.org/help/) or HTML.
-  version: 1.0
+  version: 1.0.0
 servers:
   - url: http://api.example.com/v1
     description: Optional server description, e.g. Main (production) server
@@ -19,7 +19,9 @@ paths:
       description: "Sample request:\r\n            \r\n    GET configurations/contact-reasons"
       responses:
         '200':
-          description: Ok
+          description: >- 
+            The 200 (OK) status code indicates that the request has succeeded.
+            The payload sent in a 200 response depends on the request method.
           content:
             text/plain:
               schema:
@@ -37,7 +39,8 @@ paths:
                 items:
                   $ref: '#/components/schemas/ContactReasonInfo'
         '401':
-          description: Unauthorised
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
+
   /configurations/identity-providers:
     get:
       tags:
@@ -46,7 +49,9 @@ paths:
       description: "Sample request:\r\n            \r\n    GET configurations/identity-providers"
       responses:
         '200':
-          description: Ok
+          description: >- 
+            The 200 (OK) status code indicates that the request has succeeded.
+            The payload sent in a 200 response depends on the request method.
           content:
             text/plain:
               schema:
@@ -64,14 +69,16 @@ paths:
                 items:
                   $ref: '#/components/schemas/IdentityProviderDetail'
         '401':
-          description: Unauthorised
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
   /configurations/roles:
     get:
       tags:
         - Configuration
       responses:
         '200':
-          description: Success
+          description: >- 
+            The 200 (OK) status code indicates that the request has succeeded.
+            The payload sent in a 200 response depends on the request method.
           content:
             text/plain:
               schema:
@@ -107,21 +114,44 @@ paths:
               $ref: '#/components/schemas/OrganisationProfileInfo'
       responses:
         '200':
-          description: Ok. Return created organisation id
+          description: >- 
+            The 200 (OK) status code indicates that the request has succeeded.
+            The payload sent in a 200 is the created organisation id
           content:
             text/plain:
               schema:
-                type: string
+                $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OCDS_Standards/CCS-OCDS_Schema.yaml#/components/schemas/OrganizationReference'
             application/json:
               schema:
-                type: string
+                $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OCDS_Standards/CCS-OCDS_Schema.yaml#/components/schemas/OrganizationReference'
             text/json:
               schema:
-                type: string
+                $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OCDS_Standards/CCS-OCDS_Schema.yaml#/components/schemas/OrganizationReference'
         '400':
-          description: "Bad request.\r\n             Error Codes:  INVALID_IDENTIFIER, INVALID_LEGAL_NAME, INVALID_URI, INSUFFICIENT_DETAILS"
+          description: >-
+            The 400 (Bad Request) status code indicates that the server cannot or
+            will not process the request due to something that is perceived to be
+            a client error (e.g., malformed request syntax, invalid request
+            message framing, or deceptive request routing).
+          content:
+            application/vnd.api+json:
+              schema:
+                type: array
+                items:
+                  allOf:
+                      - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Schema.yaml#/components/schemas/Error'
+                  type: object
+                  properties:
+                    status:
+                      type: string
+                      enum:
+                        - INVALID_IDENTIFIER
+                        - INVALID_LEGAL_NAME
+                        - INVALID_URI
+                        - INSUFFICIENT_DETAILS
         '401':
-          description: Unauthorised
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
+          
   '/organisations/{organisationId}':
     get:
       tags:
@@ -137,7 +167,9 @@ paths:
             nullable: true
       responses:
         '200':
-          description: Ok
+          description: >- 
+            The 200 (OK) status code indicates that the request has succeeded.
+            The payload sent in a 200 response depends on the request method.
           content:
             text/plain:
               schema:
@@ -148,10 +180,10 @@ paths:
             text/json:
               schema:
                 $ref: '#/components/schemas/OrganisationProfileResponseInfo'
+        '400':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/400InvalidRequest'
         '401':
-          description: Unauthorised
-        '404':
-          description: Resource not found
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
     put:
       tags:
         - Organisation
@@ -177,13 +209,37 @@ paths:
               $ref: '#/components/schemas/OrganisationProfileInfo'
       responses:
         '200':
-          description: Ok
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/200Success'
+        '201':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/201Success'
         '400':
-          description: "Bad request.\r\n             Error Codes: INVALID_IDENTIFIER, INVALID_LEGAL_NAME, INVALID_URI, INSUFFICIENT_DETAILS"
+          description: >-
+            The 400 (Bad Request) status code indicates that the server cannot or
+            will not process the request due to something that is perceived to be
+            a client error (e.g., malformed request syntax, invalid request
+            message framing, or deceptive request routing).
+          content:
+            application/vnd.api+json:
+              schema:
+                type: array
+                items:
+                  allOf:
+                      - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Schema.yaml#/components/schemas/Error'
+                  type: object
+                  properties:
+                    status:
+                      type: string
+                      enum:
+                        - INVALID_IDENTIFIER
+                        - INVALID_LEGAL_NAME
+                        - INVALID_URI
+                        - INSUFFICIENT_DETAILS
         '401':
-          description: Unauthorised
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
         '404':
-          description: Resource not found
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/404NotFound'
+
+          
   '/organisations/{organisationId}/contacts':
     post:
       tags:
@@ -210,7 +266,14 @@ paths:
               $ref: '#/components/schemas/ContactInfo'
       responses:
         '200':
-          description: Ok. Return created contact id
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/200Success'
+        '201':
+          description: >- 
+            The 201 (Created) status code indicates that the request has been
+            fulfilled and has resulted in one or more new resources being
+            created.  The primary resource created by the request is identified
+            by either a Location header field in the response or, if no Location
+            field is received, by the effective request URI.
           content:
             text/plain:
               schema:
@@ -225,11 +288,32 @@ paths:
                 type: integer
                 format: int32
         '400':
-          description: "Bad request.\r\n             Error Codes: INVALID_EMAIL, INVALID_PHONE_NUMBER, INSUFFICIENT_DETAILS"
+          description: >-
+            The 400 (Bad Request) status code indicates that the server cannot or
+            will not process the request due to something that is perceived to be
+            a client error (e.g., malformed request syntax, invalid request
+            message framing, or deceptive request routing).
+          content:
+            application/vnd.api+json:
+              schema:
+                type: array
+                items:
+                  allOf:
+                      - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Schema.yaml#/components/schemas/Error'
+                  type: object
+                  properties:
+                    status:
+                      type: string
+                      enum:
+                        - INVALID_IDENTIFIER
+                        - INVALID_LEGAL_NAME
+                        - INVALID_URI
+                        - INSUFFICIENT_DETAILS
         '401':
-          description: Unauthorised
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
         '404':
-          description: Not found
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/404NotFound'
+
     get:
       tags:
         - Organisation contact
@@ -249,7 +333,9 @@ paths:
             nullable: true
       responses:
         '200':
-          description: Ok
+          description: >- 
+            The 200 (OK) status code indicates that the request has succeeded.
+            The payload sent in a 200 response depends on the request method.
           content:
             text/plain:
               schema:
@@ -261,9 +347,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/OrganisationContactInfoList'
         '401':
-          description: Unauthorised
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
         '404':
-          description: Not found
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/404NotFound'
+
   '/organisations/{organisationId}/contacts/{contactId}':
     get:
       tags:
@@ -285,7 +372,9 @@ paths:
             format: int32
       responses:
         '200':
-          description: Ok
+          description: >- 
+            The 200 (OK) status code indicates that the request has succeeded.
+            The payload sent in a 200 response depends on the request method.
           content:
             text/plain:
               schema:
@@ -297,9 +386,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/OrganisationContactInfo'
         '401':
-          description: Unauthorised
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
         '404':
-          description: Not found
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/404NotFound'
+
     put:
       tags:
         - Organisation contact
@@ -331,13 +421,33 @@ paths:
               $ref: '#/components/schemas/ContactInfo'
       responses:
         '200':
-          description: Ok
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/200Success'
         '400':
-          description: "Bad request.\r\n             Error Codes: INVALID_EMAIL, INVALID_PHONE_NUMBER, INSUFFICIENT_DETAILS"
+          description: >-
+            The 400 (Bad Request) status code indicates that the server cannot or
+            will not process the request due to something that is perceived to be
+            a client error (e.g., malformed request syntax, invalid request
+            message framing, or deceptive request routing).
+          content:
+            application/vnd.api+json:
+              schema:
+                type: array
+                items:
+                  allOf:
+                      - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Schema.yaml#/components/schemas/Error'
+                  type: object
+                  properties:
+                    status:
+                      type: string
+                      enum:
+                        - INVALID_EMAIL
+                        - INVALID_PHONE_NUMBER
+                        - INSUFFICIENT_DETAILS
         '401':
-          description: Unauthorised
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
         '404':
-          description: Not found
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/404NotFound'
+
     delete:
       tags:
         - Organisation contact
@@ -358,11 +468,12 @@ paths:
             format: int32
       responses:
         '200':
-          description: Ok
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/200Success'
         '401':
-          description: Unauthorised
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
         '404':
-          description: Not found
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/404NotFound'
+
   '/organisations/{organisationId}/sites':
     post:
       tags:
@@ -389,7 +500,9 @@ paths:
               $ref: '#/components/schemas/OrganisationSiteInfo'
       responses:
         '200':
-          description: Ok. Return created site id
+          description: >- 
+            The 200 (OK) status code indicates that the request has succeeded.
+            The payload sent in a 200 response is the created site id
           content:
             text/plain:
               schema:
@@ -404,11 +517,30 @@ paths:
                 type: integer
                 format: int32
         '400':
-          description: "Bad request.\r\n             Error Codes: INVALID_SITE_NAME, INSUFFICIENT_DETAILS"
+          description: >-
+            The 400 (Bad Request) status code indicates that the server cannot or
+            will not process the request due to something that is perceived to be
+            a client error (e.g., malformed request syntax, invalid request
+            message framing, or deceptive request routing).
+          content:
+            application/vnd.api+json:
+              schema:
+                type: array
+                items:
+                  allOf:
+                      - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Schema.yaml#/components/schemas/Error'
+                  type: object
+                  properties:
+                    status:
+                      type: string
+                      enum:
+                        - INVALID_SITE_NAME
+                        - INSUFFICIENT_DETAILS
         '401':
-          description: Unauthorised
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
         '404':
-          description: Not found
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/404NotFound'
+
     get:
       tags:
         - Organisation site
@@ -423,7 +555,9 @@ paths:
             nullable: true
       responses:
         '200':
-          description: Ok with site list
+          description: >- 
+            The 200 (OK) status code indicates that the request has succeeded.
+            The payload sent in a 200 is the site list
           content:
             text/plain:
               schema:
@@ -435,9 +569,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/OrganisationSiteInfoList'
         '401':
-          description: Unauthorised
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
         '404':
-          description: Not found
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/404NotFound'
+
+          
   '/organisations/{organisationId}/sites/{siteId}':
     get:
       tags:
@@ -459,7 +595,9 @@ paths:
             format: int32
       responses:
         '200':
-          description: Ok with site details
+          description: >- 
+            The 200 (OK) status code indicates that the request has succeeded.
+            The payload sent in a 200 are the site details
           content:
             text/plain:
               schema:
@@ -471,9 +609,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/OrganisationSiteResponse'
         '401':
-          description: Unauthorised
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
         '404':
-          description: Not found
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/404NotFound'
+
     put:
       tags:
         - Organisation site
@@ -505,13 +644,32 @@ paths:
               $ref: '#/components/schemas/OrganisationSiteInfo'
       responses:
         '200':
-          description: Ok
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/200Success'
         '400':
-          description: "Bad request.\r\n             Error Codes: INVALID_SITE_NAME, INSUFFICIENT_DETAILS"
+          description: >-
+            The 400 (Bad Request) status code indicates that the server cannot or
+            will not process the request due to something that is perceived to be
+            a client error (e.g., malformed request syntax, invalid request
+            message framing, or deceptive request routing).
+          content:
+            application/vnd.api+json:
+              schema:
+                type: array
+                items:
+                  allOf:
+                      - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Schema.yaml#/components/schemas/Error'
+                  type: object
+                  properties:
+                    status:
+                      type: string
+                      enum:
+                        - INVALID_SITE_NAME
+                        - INSUFFICIENT_DETAILS
         '401':
-          description: Unauthorised
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
         '404':
-          description: Not found
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/404NotFound'
+
     delete:
       tags:
         - Organisation site
@@ -532,11 +690,12 @@ paths:
             format: int32
       responses:
         '200':
-          description: Ok
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/200Success'
         '401':
-          description: Unauthorised
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
         '404':
-          description: Not found
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/404NotFound'
+
   '/organisations/{organisationId}/sites/{siteId}/contacts':
     post:
       tags:
@@ -569,7 +728,9 @@ paths:
               $ref: '#/components/schemas/ContactInfo'
       responses:
         '200':
-          description: Ok. Return created site contact id
+          description: >- 
+            The 200 (OK) status code indicates that the request has succeeded.
+            The payload sent in a 200 response is the created site contact id
           content:
             text/plain:
               schema:
@@ -584,11 +745,31 @@ paths:
                 type: integer
                 format: int32
         '400':
-          description: "Bad request.\r\n             Error Codes: INVALID_EMAIL, INVALID_PHONE_NUMBER, INSUFFICIENT_DETAILS"
+          description: >-
+            The 400 (Bad Request) status code indicates that the server cannot or
+            will not process the request due to something that is perceived to be
+            a client error (e.g., malformed request syntax, invalid request
+            message framing, or deceptive request routing).
+          content:
+            application/vnd.api+json:
+              schema:
+                type: array
+                items:
+                  allOf:
+                      - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Schema.yaml#/components/schemas/Error'
+                  type: object
+                  properties:
+                    status:
+                      type: string
+                      enum:
+                        - INVALID_EMAIL
+                        - INVALID_PHONE_NUMBER
+                        - INSUFFICIENT_DETAILS
         '401':
-          description: Unauthorised
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
         '404':
-          description: Not found
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/404NotFound'
+
     get:
       tags:
         - Organisation site contact
@@ -614,7 +795,9 @@ paths:
             nullable: true
       responses:
         '200':
-          description: Ok
+          description: >- 
+            The 200 (OK) status code indicates that the request has succeeded.
+            The payload sent in a 200 response depends on the request method.          
           content:
             text/plain:
               schema:
@@ -626,9 +809,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/OrganisationSiteContactInfoList'
         '401':
-          description: Unauthorised
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
         '404':
-          description: Not found
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/404NotFound'
+
   '/organisations/{organisationId}/sites/{siteId}/contacts/{contactId}':
     get:
       tags:
@@ -656,7 +840,9 @@ paths:
             format: int32
       responses:
         '200':
-          description: Ok
+          description: >- 
+            The 200 (OK) status code indicates that the request has succeeded.
+            The payload sent in a 200 response depends on the request method.
           content:
             text/plain:
               schema:
@@ -668,9 +854,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/OrganisationSiteContactInfo'
         '401':
-          description: Unauthorised
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
         '404':
-          description: Not found
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/404NotFound'
+
     put:
       tags:
         - Organisation site contact
@@ -708,13 +895,33 @@ paths:
               $ref: '#/components/schemas/ContactInfo'
       responses:
         '200':
-          description: Ok
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/200Success'
         '400':
-          description: "Bad request.\r\n             Error Codes: INVALID_EMAIL, INVALID_PHONE_NUMBER, INSUFFICIENT_DETAILS"
+          description: >-
+            The 400 (Bad Request) status code indicates that the server cannot or
+            will not process the request due to something that is perceived to be
+            a client error (e.g., malformed request syntax, invalid request
+            message framing, or deceptive request routing).
+          content:
+            application/vnd.api+json:
+              schema:
+                type: array
+                items:
+                  allOf:
+                      - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Schema.yaml#/components/schemas/Error'
+                  type: object
+                  properties:
+                    status:
+                      type: string
+                      enum:
+                        - INVALID_EMAIL
+                        - INVALID_PHONE_NUMBER
+                        - INSUFFICIENT_DETAILS
         '401':
-          description: Unauthorised
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
         '404':
-          description: Not found
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/404NotFound'
+
     delete:
       tags:
         - Organisation site contact
@@ -741,11 +948,12 @@ paths:
             format: int32
       responses:
         '200':
-          description: Ok
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/200Success'
         '401':
-          description: Unauthorised
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
         '404':
-          description: Not found
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/404NotFound'
+
   '/organisations/{organisationId}/user':
     get:
       tags:
@@ -776,7 +984,9 @@ paths:
             nullable: true
       responses:
         '200':
-          description: Ok
+          description: >- 
+            The 200 (OK) status code indicates that the request has succeeded.
+            The payload sent in a 200 response depends on the request method.
           content:
             text/plain:
               schema:
@@ -788,9 +998,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/UserListResponse'
         '401':
-          description: Unauthorised
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
         '404':
-          description: Not found
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/404NotFound'
+
   '/organisations/{organisationId}/groups':
     post:
       tags:
@@ -817,7 +1028,9 @@ paths:
               $ref: '#/components/schemas/OrganisationGroupNameInfo'
       responses:
         '200':
-          description: Ok
+          description: >- 
+            The 200 (OK) status code indicates that the request has succeeded.
+            The payload sent in a 200 response depends on the request method.
           content:
             text/plain:
               schema:
@@ -832,13 +1045,31 @@ paths:
                 type: integer
                 format: int32
         '400':
-          description: "Bad request.\r\n             Error Codes: INVALID_GROUP_NAME"
+          description: >-
+            The 400 (Bad Request) status code indicates that the server cannot or
+            will not process the request due to something that is perceived to be
+            a client error (e.g., malformed request syntax, invalid request
+            message framing, or deceptive request routing).
+          content:
+            application/vnd.api+json:
+              schema:
+                type: array
+                items:
+                  allOf:
+                      - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Schema.yaml#/components/schemas/Error'
+                  type: object
+                  properties:
+                    status:
+                      type: string
+                      enum:
+                        - INVALID_GROUP_NAME
         '401':
-          description: Unauthorised
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
         '404':
-          description: Resource not found
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/404NotFound'
         '409':
           description: Resource already exists
+          
     get:
       tags:
         - Organisation Group
@@ -858,7 +1089,9 @@ paths:
             nullable: true
       responses:
         '200':
-          description: Ok
+          description: >- 
+            The 200 (OK) status code indicates that the request has succeeded.
+            The payload sent in a 200 response depends on the request method.
           content:
             text/plain:
               schema:
@@ -870,9 +1103,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/OrganisationGroupList'
         '401':
-          description: Unauthorised
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
         '404':
-          description: Resource not found
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/404NotFound'
+
   '/organisations/{organisationId}/groups/{groupId}':
     delete:
       tags:
@@ -894,11 +1128,12 @@ paths:
             format: int32
       responses:
         '200':
-          description: Ok
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/200Success'
         '401':
-          description: Unauthorised
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
         '404':
-          description: Resource not found
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/404NotFound'
+
     get:
       tags:
         - Organisation Group
@@ -919,7 +1154,9 @@ paths:
             format: int32
       responses:
         '200':
-          description: Ok
+          description: >- 
+            The 200 (OK) status code indicates that the request has succeeded.
+            The payload sent in a 200 response depends on the request method.
           content:
             text/plain:
               schema:
@@ -931,9 +1168,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/OrganisationGroupResponseInfo'
         '401':
-          description: Unauthorised
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
         '404':
-          description: Resource not found
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/404NotFound'
+
     patch:
       tags:
         - Organisation Group
@@ -965,15 +1203,34 @@ paths:
               $ref: '#/components/schemas/OrganisationGroupRequestInfo'
       responses:
         '200':
-          description: Ok
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/200Success'
         '400':
-          description: "Bad request.\r\n             Error Codes: INVALID_ROLE_INFO, INVALID_USER_INFO"
+          description: >-
+            The 400 (Bad Request) status code indicates that the server cannot or
+            will not process the request due to something that is perceived to be
+            a client error (e.g., malformed request syntax, invalid request
+            message framing, or deceptive request routing).
+          content:
+            application/vnd.api+json:
+              schema:
+                type: array
+                items:
+                  allOf:
+                      - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Schema.yaml#/components/schemas/Error'
+                  type: object
+                  properties:
+                    status:
+                      type: string
+                      enum:
+                        - INVALID_ROLE_INFO
+                        - INVALID_USER_INFO
         '401':
-          description: Unauthorised
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
         '404':
-          description: Resource not found
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/404NotFound'
         '409':
           description: Resource already exists
+          
   '/organisations/{organisationId}/identity-providers':
     get:
       tags:
@@ -989,7 +1246,9 @@ paths:
             nullable: true
       responses:
         '200':
-          description: Ok
+          description: >- 
+            The 200 (OK) status code indicates that the request has succeeded.
+            The payload sent in a 200 response depends on the request method.
           content:
             text/plain:
               schema:
@@ -1007,9 +1266,10 @@ paths:
                 items:
                   $ref: '#/components/schemas/IdentityProviderDetail'
         '401':
-          description: Unauthorised
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
         '404':
-          description: Resource not found
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/404NotFound'
+
   '/organisations/{organisationId}/identity-providers/update':
     put:
       tags:
@@ -1032,7 +1292,9 @@ paths:
             type: boolean
       responses:
         '200':
-          description: Success
+          description: >- 
+            The 200 (OK) status code indicates that the request has succeeded.
+            The payload sent in a 200 response depends on the request method.
           content:
             text/plain:
               schema:
@@ -1064,7 +1326,9 @@ paths:
             nullable: true
       responses:
         '200':
-          description: Ok
+          description: >- 
+            The 200 (OK) status code indicates that the request has succeeded.
+            The payload sent in a 200 response depends on the request method.
           content:
             text/plain:
               schema:
@@ -1082,9 +1346,10 @@ paths:
                 items:
                   $ref: '#/components/schemas/OrganisationRole'
         '401':
-          description: Unauthorised
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
         '404':
-          description: Resource not found
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/404NotFound'
+
   '/organisations/{ciiOrganisationId}/eligableRoles':
     get:
       tags:
@@ -1098,7 +1363,9 @@ paths:
             nullable: true
       responses:
         '200':
-          description: Success
+          description: >- 
+            The 200 (OK) status code indicates that the request has succeeded.
+            The payload sent in a 200 response depends on the request method.
           content:
             text/plain:
               schema:
@@ -1115,6 +1382,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/OrganisationRole'
+                  
   '/organisations/{ciiOrganisationId}/updateEligableRoles':
     put:
       tags:
@@ -1139,7 +1407,8 @@ paths:
               $ref: '#/components/schemas/OrganisationRoleUpdate'
       responses:
         '200':
-          description: Success
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/200Success'
+          
   
 components:
   schemas:
@@ -1219,23 +1488,24 @@ components:
           nullable: true
       additionalProperties: false
     OrganisationAddress:
-      type: object
-      properties:
-        streetAddress:
-          type: string
-          nullable: true
-        locality:
-          type: string
-          nullable: true
-        region:
-          type: string
-          nullable: true
-        postalCode:
-          type: string
-          nullable: true
-        countryCode:
-          type: string
-          nullable: true
+      $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OCDS_Standards/CCS-OCDS_Schema.yaml#/components/schemas/Address'
+      #type: object
+      #properties:
+      #  streetAddress:
+      #    type: string
+      #    nullable: true
+      #  locality:
+      #    type: string
+      #    nullable: true
+      #  region:
+      #    type: string
+      #    nullable: true
+      #  postalCode:
+      #    type: string
+      #    nullable: true
+      #  countryCode:
+      #    type: string
+      #    nullable: true
       additionalProperties: false
     OrganisationDetail:
       type: object
@@ -1260,31 +1530,50 @@ components:
       additionalProperties: false
       
     OrganisationProfileInfo:
-      $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OCDS_Standards/CCS-OCDS_Schema.yaml#/components/schemas/Organization'
-#      type: object
-#      properties:
-#        identifier:
-#          $ref: '#/components/schemas/OrganisationIdentifier'
-#        address:
-#          $ref: '#/components/schemas/OrganisationAddress'
-#        detail:
-#          $ref: '#/components/schemas/OrganisationDetail'
-#      additionalProperties: false
-#    OrganisationProfileResponseInfo:
-#      type: object
-#      properties:
-#        identifier:
-#          $ref: '#/components/schemas/OrganisationIdentifier'
-#        additionalIdentifiers:
-#          type: array
-#          items:
-#            $ref: '#/components/schemas/OrganisationIdentifier'
-#          nullable: true
-#        address:
-#          $ref: '#/components/schemas/OrganisationAddress'
-#        detail:
-#          $ref: '#/components/schemas/OrganisationDetail'
-#      additionalProperties: false
+      # $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OCDS_Standards/CCS-OCDS_Schema.yaml#/components/schemas/Organization'
+      type: object
+      properties:
+        identifier:
+          # Scheme and ID are held within CII not Organisation service
+          # $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OCDS_Standards/CCS-OCDS_Schema.yaml#/components/schemas/Identifier'
+          title: Identifier
+          description: A unique identifier for a party (organization).
+          type: object
+          properties:
+            legalName:
+              title: Legal Name
+              description: The legally registered name of the organization.
+              type: string
+              nullable: true
+            uri:
+              title: URI
+              description: 'A URI to identify the organization, such as those provided by [Open Corporates](http://www.opencorporates.com) or some other relevant URI provider. This is not for listing the website of the organization: that can be done through the URL field of the Organization contact point.'
+              type: string
+              nullable: true
+              format: uri
+        address:
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OCDS_Standards/CCS-OCDS_Schema.yaml#/components/schemas/Address'
+        detail:
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OCDS_Standards/CCS-OCDS_Schema.yaml#/components/schemas/OrganizationDetail'
+      additionalProperties: false
+
+    OrganisationProfileResponseInfo:
+      # Roles, Contact Point are stored in there own endpoints
+      #$ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OCDS_Standards/CCS-OCDS_Schema.yaml#/components/schemas/Organization'
+      type: object
+      properties:
+        identifier:
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OCDS_Standards/CCS-OCDS_Schema.yaml#/components/schemas/Identifier'
+        additionalIdentifiers:
+          type: array
+          items:
+            $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OCDS_Standards/CCS-OCDS_Schema.yaml#/components/schemas/Identifier'
+          nullable: true
+        address:
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OCDS_Standards/CCS-OCDS_Schema.yaml#/components/schemas/Address'
+        detail:
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OCDS_Standards/CCS-OCDS_Schema.yaml#/components/schemas/OrganisationDetail'
+      additionalProperties: false
       
       
     ContactInfo:
@@ -1293,47 +1582,25 @@ components:
         contactReason:
           type: string
           nullable: true
-        name:
-          type: string
-          nullable: true
-        email:
-          type: string
-          nullable: true
-        phoneNumber:
-          type: string
-          nullable: true
-        fax:
-          type: string
-          nullable: true
-        webUrl:
-          type: string
-          nullable: true
-      additionalProperties: false
+        contact:
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OCDS_Standards/CCS-OCDS_Schema.yaml#/components/schemas/ContactPoint'
+
+      
     ContactResponseInfo:
       type: object
       properties:
         contactReason:
           type: string
           nullable: true
-        name:
-          type: string
-          nullable: true
-        email:
-          type: string
-          nullable: true
-        phoneNumber:
-          type: string
-          nullable: true
-        fax:
-          type: string
-          nullable: true
-        webUrl:
-          type: string
-          nullable: true
         contactId:
           type: integer
           format: int32
+        contact:
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OCDS_Standards/CCS-OCDS_Schema.yaml#/components/schemas/ContactPoint'
+
+        
       additionalProperties: false
+      
     OrganisationContactInfoList:
       type: object
       properties:
@@ -1343,28 +1610,14 @@ components:
         contactsList:
           type: array
           items:
-            $ref: '#/components/schemas/ContactResponseInfo'
+            $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OCDS_Standards/CCS-OCDS_Schema.yaml#/components/schemas/ContactPoint'
           nullable: true
       additionalProperties: false
+      
     OrganisationContactInfo:
       type: object
       properties:
         contactReason:
-          type: string
-          nullable: true
-        name:
-          type: string
-          nullable: true
-        email:
-          type: string
-          nullable: true
-        phoneNumber:
-          type: string
-          nullable: true
-        fax:
-          type: string
-          nullable: true
-        webUrl:
           type: string
           nullable: true
         contactId:
@@ -1373,7 +1626,10 @@ components:
         organisationId:
           type: string
           nullable: true
+        contact:
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OCDS_Standards/CCS-OCDS_Schema.yaml#/components/schemas/ContactPoint'
       additionalProperties: false
+      
     OrganisationSiteInfo:
       type: object
       properties:
@@ -1381,8 +1637,9 @@ components:
           type: string
           nullable: true
         address:
-          $ref: '#/components/schemas/OrganisationAddress'
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OCDS_Standards/CCS-OCDS_Schema.yaml#/components/schemas/Address'
       additionalProperties: false
+      
     SiteDetail:
       type: object
       properties:
@@ -1390,6 +1647,7 @@ components:
           type: integer
           format: int32
       additionalProperties: false
+      
     OrganisationSite:
       type: object
       properties:
@@ -1397,9 +1655,10 @@ components:
           type: string
           nullable: true
         address:
-          $ref: '#/components/schemas/OrganisationAddress'
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OCDS_Standards/CCS-OCDS_Schema.yaml#/components/schemas/Address'
         details:
           $ref: '#/components/schemas/SiteDetail'
+          
       additionalProperties: false
     OrganisationSiteInfoList:
       type: object
@@ -1420,7 +1679,7 @@ components:
           type: string
           nullable: true
         address:
-          $ref: '#/components/schemas/OrganisationAddress'
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OCDS_Standards/CCS-OCDS_Schema.yaml#/components/schemas/Address'
         details:
           $ref: '#/components/schemas/SiteDetail'
         organisationId:
@@ -1448,21 +1707,6 @@ components:
         contactReason:
           type: string
           nullable: true
-        name:
-          type: string
-          nullable: true
-        email:
-          type: string
-          nullable: true
-        phoneNumber:
-          type: string
-          nullable: true
-        fax:
-          type: string
-          nullable: true
-        webUrl:
-          type: string
-          nullable: true
         contactId:
           type: integer
           format: int32
@@ -1472,6 +1716,9 @@ components:
         organisationId:
           type: string
           nullable: true
+        contact:
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OCDS_Standards/CCS-OCDS_Schema.yaml#/components/schemas/ContactPoint'
+
       additionalProperties: false
     UserListInfo:
       type: object
