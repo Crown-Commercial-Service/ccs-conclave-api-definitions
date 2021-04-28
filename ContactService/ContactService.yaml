@@ -3,7 +3,7 @@ openapi: 3.0.1
 info:
   title: Contact Service API
   description: Optional multiline or single-line description in [CommonMark](http://commonmark.org/help/) or HTML.
-  version: 1.0
+  version: 1.0.0
 servers:
   - url: http://api.example.com/v1
     description: Optional server description, e.g. Main (production) server
@@ -14,9 +14,9 @@ paths:
   /contacts:
     get:
       tags:
-        - Configuration
-      summary: Allows a user to get contact reasons
-      description: "Sample request:\r\n            \r\n    GET configurations/contact-reasons"
+        - Contacts
+      summary: List of contacts that match criteria
+      description: List of contacts that match criteria
       responses:
         '200':
           description: Ok
@@ -25,27 +25,62 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ContactReasonInfo'
+                  $ref: '#/components/schemas/ContactList'
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ContactReasonInfo'
+                  $ref: '#/components/schemas/ContactList'
             text/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ContactReasonInfo'
+                  $ref: '#/components/schemas/ContactList'
         '401':
-          description: Unauthorised
-          
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
 
-  /contacts/{contactID}
+    post:
+      tags:
+        - Contacts
+      summary: Create a new contact
+      description: Create a new contact
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Contact'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Contact'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Contact'
+      responses:
+        '200':
+          description: >- 
+            The 200 (OK) status code indicates that the request has succeeded.
+            The payload sent in a 200 is the created organisation id
+          content:
+            text/plain:
+              schema:
+                $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OCDS_Standards/CCS-OCDS_Schema.yaml#/components/schemas/OrganizationReference'
+            application/json:
+              schema:
+                $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OCDS_Standards/CCS-OCDS_Schema.yaml#/components/schemas/OrganizationReference'
+            text/json:
+              schema:
+                $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OCDS_Standards/CCS-OCDS_Schema.yaml#/components/schemas/OrganizationReference'
+        '400':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/400BadRequest'
+        '401':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
+  
+  /contacts/contactTypes:
     get:
       tags:
-        - Configuration
-      summary: Allows a user to get contact reasons
-      description: "Sample request:\r\n            \r\n    GET configurations/contact-reasons"
+        - Contacts
+      summary: List of contact types
+      description: List of contact types that are allowed in the 
       responses:
         '200':
           description: Ok
@@ -54,32 +89,133 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ContactReasonInfo'
+                  $ref: '#/components/schemas/ContactType'
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ContactReasonInfo'
+                  $ref: '#/components/schemas/ContactType'
             text/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ContactReasonInfo'
+                  $ref: '#/components/schemas/ContactType'
         '401':
-          description: Unauthorised
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
+                    
+
+  /contacts/{contactID}:
+    parameters:
+      - $ref: '#/components/parameters/ContactParam'
+    get:
+      tags:
+        - Contacts
+      summary: Get details about one contact
+      description: Get details about one contact
+      responses:
+        '200':
+          description: Ok
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Contact'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Contact'
+            text/json:
+              schema:
+                  $ref: '#/components/schemas/Contact'
+        '401':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
+         
+    put:
+      tags:
+        - Contacts
+      summary: Edit details for one contact
+      description: Edit details for one contact
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Contact'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Contact'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Contact'
+      responses:
+        '200':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/200Success'
+        '201':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/201Success'
+        '400':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/400BadRequest'
+        '401':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
+        '404':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/404NotFound'
+
+ 
+components:
+  parameters:
+    ContactParam:
+      name: contactID
+      in: path
+      required: true
+      description: Team ID
+      schema:
+        $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Schema.yaml#/components/schemas/GenericID'
+        
+  schemas:
+    Contact:
+      type: object
+      properties:
+        contactType:
+          type: string
+          enum:
+            - name
+            - email
+            - telephone
+            - faxNumber
+            - url
+          example: telephone
+        contactValue:
+          type: string
+          example: 012345678901
           
+    ContactType:
+      type: object
+      properties:
+        contactType:
+          type: string
+          enum:
+            - name
+            - email
+            - telephone
+            - faxNumber
+            - url
+          example: telephone
+        contactTypeDescription:
+          type: string
+          example: Mobile or landline phone number for the contact
+        contactTypeExample:
+          type: string
+          example: 012345678901
+        contactTypePattern:
+          type: string
+          example: ^\s*((?:[+](?:\s*\d)(?:[-\s]*\d)|0)?(?:\s*\d)(?:[-\s]*\d){9}|[(](?:\s*\d)(?:[-\s]*\d)+\s*[)](?:[-\s]*\d)+)\s*$
           
+    ContactList:
+      type: object
+      properties:
+        contactID:
+          type: string
+          example: 1234
+        contact:
+          $ref: '#/components/schemas/Contact'
 
   securitySchemes:
-    ApiKey:
-      type: apiKey
-      name: X-API-KEY
-      in: header
-      
-security:
-  - ApiKey: []
-  
-    securitySchemes:
     openID:
       type: openIdConnect
       openIdConnectUrl: 'https://accounts.google.com/.well-known/openid-configuration'
