@@ -171,7 +171,52 @@ paths:
             type: string
       responses:
         '302':
-          description: Redirect
+           description: Redirect to Redirect URI or authentication page
+           headers:
+            Location:
+              description: URI where the client can refresh the expired token.
+              schema:
+                type: string
+                format: uri  # Optional - use if the Location header is an absolute URI, starting with http(s)://
+              examples:
+                302AuthCode:
+                  description: Redirect URI if Authentication is succesful
+                  value: 'HTTP/1.1 302 Found Location: https://client.example.org/cb?code=SplxlOBeZQQYbYS6WxSbIA&state=af0ifjsldkj'
+                302AuthenticationPage:
+                  description: >-
+                    Redirect URI to authentication page 
+                    for user to authenticate
+                  value: 'HTTP/1.1 302 Found Location: https://client.example.org/cb?error=login_required&error_description=Unsupported%20response_type%20value&state=af0ifjsldkj'
+                302InteractionRequired:
+                  description: >-
+                    The Authorization Server requires End-User interaction of some form to 
+                    proceed. This error MAY be returned when the prompt parameter value 
+                    in the Authentication Request is none, but the Authentication Request 
+                    cannot be completed without displaying a user interface for End-User 
+                    interaction.
+                  value: 'HTTP/1.1 302 Found Location: https://client.example.org/cb?error=interaction_required&error_description=User%20interface%20required'
+                    
+                # *** other error codes to be defined
+                #interaction_required
+                #    The Authorization Server requires End-User interaction of some form to proceed. This error MAY be returned when the prompt parameter value in the Authentication Request is none, but the Authentication Request cannot be completed without displaying a user interface for End-User interaction.
+                #login_required
+                #    The Authorization Server requires End-User authentication. This error MAY be returned when the prompt parameter value in the Authentication Request is none, but the Authentication Request cannot be completed without displaying a user interface for End-User authentication.
+                #account_selection_required
+                #    The End-User is REQUIRED to select a session at the Authorization Server. The End-User MAY be authenticated at the Authorization Server with different associated accounts, but the End-User did not select a session. This error MAY be returned when the prompt parameter value in the Authentication Request is none, but the Authentication Request cannot be completed without displaying a user interface to prompt for a session to use.
+                #consent_required
+                #    The Authorization Server requires End-User consent. This error MAY be returned when the prompt parameter value in the Authentication Request is none, but the Authentication Request cannot be completed without displaying a user interface for End-User consent.
+                #invalid_request_uri
+                #    The request_uri in the Authorization Request returns an error or contains invalid data.
+                #invalid_request_object
+                #    The request parameter contains an invalid Request Object.
+                #request_not_supported
+                #    The OP does not support use of the request parameter defined in Section 6.
+                #request_uri_not_supported
+                #    The OP does not support use of the request_uri parameter defined in Section 6.
+                #registration_not_supported
+T               #    he OP does not support use of the registration parameter defined in Section 7.2.1.
+
+
   /security/token:
     post:
       tags:
