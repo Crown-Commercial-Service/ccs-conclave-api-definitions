@@ -1,0 +1,1029 @@
+openapi: 3.0.0
+info:
+  title: CCS Sercurity Service
+  description: This is an example CCS SecurityService Service API.
+  termsOfService: 'http://api.crowncommercial.gov.uk/terms/'
+  contact:
+    email: apiteam@crowncommercial.gov.uk
+  license:
+    name: Open Government Licence 3.0
+    url: 'https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/'
+  version: 1.0.5
+servers:
+  - url: /
+tags:
+  - name: SecurityService
+    description: 'Everything about SecurityService '
+    externalDocs:
+      description: Find out more
+      url: 'http://apis.crowncommercial.gov.uk'
+paths:
+  /.well-known/jwks.json:
+    get:
+      tags:
+        - JsonWebKeyFile
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/JsonWebKeySet'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonWebKeySet'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/JsonWebKeySet'
+  /test/oauth/token:
+    post:
+      tags:
+        - test
+      summary: Authenticates a user and issues 3 tokens
+      description: "Sample request:\r\n            \r\n    POST /login\r\n    {\r\n       \"username\": \"helen@xxx.com\",\r\n       \"userpassword\": \"1234\",\r\n       \"client_id\":\"1234\",\r\n       \"client_secret\":\"xxxx\"\r\n    }"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/AuthRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/AuthRequest'
+      responses:
+        '200':
+          description: 'For successfull authentication id token, refresh token and access token are issued.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResultDto'
+        '400':
+          description: 'Password reset pending. code: PASSWORD_RESET_REQUIRED'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: Authentication fails
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /security/authorize:
+    get:
+      tags:
+        - security
+      summary: Redirects the user to the configured identity and access management login URL
+      parameters:
+        - name: scope
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: response_type
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: client_id
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: redirect_uri
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: code_challenge_method
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: code_challenge
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: prompt
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: state
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: nonce
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: display
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: login_hint
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: max_age
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: integer
+            format: int32
+        - name: acr_values
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+      responses:
+        '302':
+          description: Redirect
+  /security/token:
+    post:
+      tags:
+        - security
+      summary: 'Issues new security tokens when provide any type of following (auth code, refresh token)'
+      description: "Sample requests:\r\n            \r\n    POST /token\r\n    {\r\n       \"code\": \"abcs123\",\r\n       \"refreshtoken\": null,\r\n       \"granttype:\"authorization_code\",\r\n       \"client_secret\":\"xxx\"\r\n       \"redirect_uri\":\"http://redirect_url/\"\r\n    }\r\n            \r\n    POST /token\r\n    {\r\n       \"code\": null,\r\n       \"refreshtoken\": \"abcs123\",\r\n       \"granttype:\"refresh_token\",\r\n       \"client_secret\":\"xxx\"\r\n       \"redirect_uri\":\"http://redirect_url/\",\r\n       \"state\":\"123\"\r\n    }"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRequestInfo'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/TokenRequestInfo'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/TokenRequestInfo'
+      responses:
+        '200':
+          description: "When grant type is \"authorization_code\" returns id token,refresh token and access token.\r\n             When grant type is \"refresh_token\" returns id token and access token"
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/TokenResponseInfo'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponseInfo'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponseInfo'
+        '400':
+          description: "Code: INVALID_TOKEN (Refresh token and auth code are empty),\r\nCode: UNSUPPORTED_GRANT_TYPE (Invalid grant type)"
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /security/checksession:
+    get:
+      tags:
+        - security
+      summary: Returns OP IFrame
+      responses:
+        '200':
+          description: Returns OPIFrame successfully
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /security/register:
+    post:
+      tags:
+        - security
+      summary: Registers a new user in Identity Provider
+      description: "Sample request:\r\n            \r\n    POST /register\r\n    {\r\n       \"UserName\": \"helen@xxx.com\",\r\n       \"Email\": \"helen@xxx.com\",\r\n       \"FirstName\":\"Helen\",\r\n       \"LastName\":\"Fox\"\r\n    }"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserInfo'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/UserInfo'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/UserInfo'
+      responses:
+        '201':
+          description: user is created successfully
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/UserRegisterResult'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserRegisterResult'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/UserRegisterResult'
+        '400':
+          description: "Code: ERROR_FIRSTNAME_REQUIRED (first name is required),\r\nCode: ERROR_LASTNAME_REQUIRED (last name is required)\r\nCode: ERROR_EMAIL_REQUIRED (email is required)\r\nCode: ERROR_EMAIL_FORMAT (invaid email)"
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /security/externalidp:
+    get:
+      tags:
+        - security
+      summary: Returns all external identity providers that are listed
+      responses:
+        '200':
+          description: List of external identity providers
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/IdentityProviderInfoDto'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/IdentityProviderInfoDto'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/IdentityProviderInfoDto'
+  /security/updateuser:
+    post:
+      tags:
+        - security
+      summary: Updates a user in the identity provider
+      description: "Sample requests:\r\n            \r\n    POST /updateuser\r\n    {\r\n       \"id\":\"123\",\r\n       \"userName\": \"helen@xxx.com\",\r\n       \"Email\": \"helen@xxx.com\",\r\n       \"FirstName\":\"Helen\",\r\n       \"LastName\":\"Fox\",\r\n       \"Role\":\"Admin\",\r\n       \"Groups\":[\"CCS SITE 1,CCS SITE 2\"],\r\n       \"ProfilePageUrl:\"<URL>Sample Profile URL</URL>\"\r\n    }"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserInfo'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/UserInfo'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/UserInfo'
+      responses:
+        '204':
+          description: Successfully updates a user
+        '400':
+          description: "Code: ERROR_FIRSTNAME_REQUIRED (FirstName Required),\r\nCode: ERROR_LASTNAME_REQUIRED (LastName Required)\r\nCode: ERROR_EMAIL_REQUIRED (Email Required)\r\nCode: ERROR_EMAIL_FORMAT (Invaid Email)"
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /security/changepassword:
+    post:
+      tags:
+        - security
+      summary: Change the old password to the new password
+      description: "Sample request:\r\n            \r\n    POST /changepassword\r\n    {\r\n       \"UserId\":\"123\",\r\n       \"AccessToken\": \"1234\",\r\n       \"NewPassword\": \"newpassword\",\r\n       \"OldPassword\":\"oldpassword\"\r\n    }"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangePasswordDto'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/ChangePasswordDto'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/ChangePasswordDto'
+      responses:
+        '204':
+          description: password change is successful
+        '400':
+          description: "Code: ACCESS_TOKEN_REQUIRED (uccess token is required),\r\nCode: NEW_PASSWORD_REQUIRED (new password is required)\r\nCode: OLD_PASSWORD_REQUIRED (old password is required)"
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /security/passwordchallenge:
+    post:
+      tags:
+        - security
+      summary: Change the temporary password to a new password after the initial login (after registration)
+      description: "Sample request:\r\n            \r\n    POST /passwordchallenge\r\n    {\r\n       \"UserName\": \"helen@xxx.com\",\r\n       \"SessionId\": \"session1\",\r\n       \"NewPassword\":\"newpassword\"\r\n    }"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordChallengeDto'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/PasswordChallengeDto'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/PasswordChallengeDto'
+      responses:
+        '200':
+          description: 'id token, access token and refresh token'
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/AuthResultDto'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResultDto'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/AuthResultDto'
+        '400':
+          description: "Code: USERNAME_REQUIRED (username is required),\r\nCode: NEW_PASSWORD_REQUIRED (new password is required)\r\nCode: SESSION_ID_REQUIRED (session id is required)\r\nCode: ERROR_PASSWORD_POLICY_MISMATCH (password policy mismatched)"
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: When invalid session id/user name is provided
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /security/passwordresetrequest:
+    post:
+      tags:
+        - security
+      summary: Initialize a password reset request. A notification with a code will be sent to the user
+      description: "Sample request:\r\nPOST /passwordresetrequest\r\n{\r\n  \"helen@xxx.com\"\r\n}"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+          text/json:
+            schema:
+              type: string
+          application/*+json:
+            schema:
+              type: string
+      responses:
+        '204':
+          description: Successfully initialize reset password
+        '400':
+          description: 'Code: USERNAME_REQUIRED (UserName is required)'
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /security/passwordreset:
+    post:
+      tags:
+        - security
+      summary: Reset the password
+      description: "Sample requests:\r\n            \r\n    POST /passwordreset\r\n    {\r\n       \"UserName\": \"helen@xxx.com\",\r\n       \"VerificationCode\": \"1234\",\r\n       \"NewPassword\":\"XXXX\"\r\n    }"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResetPasswordDto'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/ResetPasswordDto'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/ResetPasswordDto'
+      responses:
+        '204':
+          description: Successfully reset the password
+        '400':
+          description: "Code: VERIFICATION_CODE_REQUIRED (Verification code is required),\r\nCode: USERNAME_REQUIRED (UserName is required),\r\nCode: NEW_PASSWORD_REQUIRED (New password is required)"
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /security/logout:
+    get:
+      tags:
+        - security
+      summary: Clear out the user session details
+      description: "Sample request:\r\nGET /logout/http://redirecturi.com"
+      parameters:
+        - name: clientId
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: redirecturi
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+      responses:
+        '302':
+          description: Successfully sign out the user
+        '400':
+          description: 'Code: REDIRECT_URI_REQUIRED (Redirect URI is required)'
+        '401':
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /security/redirect_to_identity_provider:
+    get:
+      tags:
+        - security
+      summary: Redirect to the identity provider login
+      responses:
+        '302':
+          description: Successfully redirect the user
+  /security/revoke:
+    get:
+      tags:
+        - security
+      summary: Revoke refresh token
+      parameters:
+        - name: refreshToken
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+      responses:
+        '302':
+          description: Successfully redirect the user
+  /security/validate_token:
+    post:
+      tags:
+        - security
+      summary: Validates the token
+      description: "Sample request:\r\nPOST security/validate_token?clientid=xxx Authorization: Bearer vF9dft4qmT"
+      parameters:
+        - name: clientId
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully validated the token
+          content:
+            text/plain:
+              schema:
+                type: boolean
+            application/json:
+              schema:
+                type: boolean
+            text/json:
+              schema:
+                type: boolean
+        '400':
+          description: "Code: TOKEN_REQUIRED (Token is required)\r\nCode: CLIENTID_REQUIRED (ClientId is required)"
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: Unauthorised
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /security/deleteuser:
+    delete:
+      tags:
+        - security
+      summary: Delete a user
+      parameters:
+        - name: email
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Successfully delete the user
+        '400':
+          description: 'Code: INVALID_EMAIL (Invalid Email address)'
+        '404':
+          description: User not found
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /security/getuser:
+    get:
+      tags:
+        - security
+      summary: Get a user
+      parameters:
+        - name: email
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User details
+        '204':
+          description: Success
+        '400':
+          description: 'Code: INVALID_EMAIL (Invalid Email address)'
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: User not found
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /security/nominate:
+    post:
+      tags:
+        - security
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserInfo'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/UserInfo'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/UserInfo'
+      responses:
+        '200':
+          description: Success
+components:
+  schemas:
+    AuthRequest:
+      required:
+        - client_id
+        - password
+        - username
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        client_id:
+          type: string
+        client_secret:
+          type: string
+          nullable: true
+      additionalProperties: false
+    AuthResultDto:
+      type: object
+      properties:
+        ChallengeRequired:
+          type: boolean
+        ChallengeName:
+          type: string
+          nullable: true
+        SessionId:
+          type: string
+          nullable: true
+        IdToken:
+          type: string
+          nullable: true
+        AccessToken:
+          type: string
+          nullable: true
+        RefreshToken:
+          type: string
+          nullable: true
+      additionalProperties: false
+    ChangePasswordDto:
+      type: object
+      properties:
+        UserName:
+          type: string
+          nullable: true
+        NewPassword:
+          type: string
+          nullable: true
+        OldPassword:
+          type: string
+          nullable: true
+      additionalProperties: false
+    CryptoProviderCache:
+      type: object
+      additionalProperties: false
+    CryptoProviderFactory:
+      type: object
+      properties:
+        CryptoProviderCache:
+          $ref: '#/components/schemas/CryptoProviderCache'
+        CustomCryptoProvider:
+          $ref: '#/components/schemas/ICryptoProvider'
+        CacheSignatureProviders:
+          type: boolean
+          default: true
+        SignatureProviderObjectPoolCacheSize:
+          type: integer
+          format: int32
+      additionalProperties: false
+    ICryptoProvider:
+      type: object
+      additionalProperties: false
+    IdentityProviderInfoDto:
+      type: object
+      properties:
+        Name:
+          type: string
+          nullable: true
+        Type:
+          type: string
+          nullable: true
+        CreatedDate:
+          type: string
+          format: date-time
+        LastModifiedDate:
+          type: string
+          format: date-time
+      additionalProperties: false
+    JsonWebKey:
+      type: object
+      properties:
+        CryptoProviderFactory:
+          $ref: '#/components/schemas/CryptoProviderFactory'
+        AdditionalData:
+          type: object
+          additionalProperties: {}
+          nullable: true
+          readOnly: true
+        Alg:
+          type: string
+          nullable: true
+        Crv:
+          type: string
+          nullable: true
+        D:
+          type: string
+          nullable: true
+        DP:
+          type: string
+          nullable: true
+        DQ:
+          type: string
+          nullable: true
+        E:
+          type: string
+          nullable: true
+        K:
+          type: string
+          nullable: true
+        KeyId:
+          type: string
+          nullable: true
+        KeyOps:
+          type: array
+          nullable: true
+          readOnly: true
+          items:
+            type: string
+        Kid:
+          type: string
+          nullable: true
+        Kty:
+          type: string
+          nullable: true
+        'N':
+          type: string
+          nullable: true
+        Oth:
+          type: array
+          nullable: true
+          items:
+            type: string
+        P:
+          type: string
+          nullable: true
+        Q:
+          type: string
+          nullable: true
+        QI:
+          type: string
+          nullable: true
+        Use:
+          type: string
+          nullable: true
+        X:
+          type: string
+          nullable: true
+        X5c:
+          type: array
+          nullable: true
+          readOnly: true
+          items:
+            type: string
+        X5t:
+          type: string
+          nullable: true
+        X5tS256:
+          type: string
+          nullable: true
+        X5u:
+          type: string
+          nullable: true
+        'Y':
+          type: string
+          nullable: true
+        KeySize:
+          type: integer
+          format: int32
+          readOnly: true
+        HasPrivateKey:
+          type: boolean
+          readOnly: true
+      additionalProperties: false
+    JsonWebKeySet:
+      type: object
+      properties:
+        AdditionalData:
+          type: object
+          additionalProperties: {}
+          nullable: true
+          readOnly: true
+        Keys:
+          type: array
+          nullable: true
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/JsonWebKey'
+        SkipUnresolvedJsonWebKeys:
+          type: boolean
+          default: true
+      additionalProperties: false
+    PasswordChallengeDto:
+      type: object
+      properties:
+        UserName:
+          type: string
+          nullable: true
+        SessionId:
+          type: string
+          nullable: true
+        NewPassword:
+          type: string
+          nullable: true
+      additionalProperties: false
+    ProblemDetails:
+      type: object
+      properties:
+        type:
+          type: string
+          nullable: true
+        title:
+          type: string
+          nullable: true
+        status:
+          type: integer
+          format: int32
+          nullable: true
+        detail:
+          type: string
+          nullable: true
+        instance:
+          type: string
+          nullable: true
+      additionalProperties: {}
+    ResetPasswordDto:
+      type: object
+      properties:
+        UserName:
+          type: string
+          nullable: true
+        VerificationCode:
+          type: string
+          nullable: true
+        NewPassword:
+          type: string
+          nullable: true
+      additionalProperties: false
+    TokenRequestInfo:
+      required:
+        - client_id
+        - grant_type
+        - redirect_uri
+      type: object
+      properties:
+        code:
+          type: string
+          nullable: true
+        refresh_token:
+          type: string
+          nullable: true
+        grant_type:
+          type: string
+        redirect_uri:
+          type: string
+        client_id:
+          type: string
+        code_verifier:
+          type: string
+          nullable: true
+        client_secret:
+          type: string
+          nullable: true
+        state:
+          type: string
+          nullable: true
+      additionalProperties: false
+    TokenResponseInfo:
+      type: object
+      properties:
+        access_token:
+          type: string
+          nullable: true
+        id_token:
+          type: string
+          nullable: true
+        refresh_token:
+          type: string
+          nullable: true
+        token_type:
+          type: string
+          nullable: true
+        session_state:
+          type: string
+          nullable: true
+        expires_in:
+          type: integer
+          format: int32
+      additionalProperties: false
+    UserInfo:
+      type: object
+      properties:
+        Id:
+          type: string
+          nullable: true
+        UserName:
+          type: string
+          nullable: true
+        Email:
+          type: string
+          nullable: true
+        FirstName:
+          type: string
+          nullable: true
+        LastName:
+          type: string
+          nullable: true
+        Role:
+          type: string
+          nullable: true
+        Groups:
+          type: array
+          nullable: true
+          items:
+            type: string
+        ProfilePageUrl:
+          type: string
+          nullable: true
+      additionalProperties: false
+    UserRegisterResult:
+      type: object
+      properties:
+        Id:
+          type: string
+          nullable: true
+        UserName:
+          type: string
+          nullable: true
+        UserStatus:
+          type: string
+          nullable: true
+      additionalProperties: false

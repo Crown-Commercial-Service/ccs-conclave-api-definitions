@@ -117,7 +117,8 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/QuestionType'        
+                  $ref: '#/components/schemas/QuestionType'
+                example:  [ string, date-time, number, integer, boolean ]      
           description: "Accepted"
         '403':
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/403Forbidden'
@@ -146,7 +147,7 @@ paths:
           content:
             application/vnd.api+json:
               schema:
-                $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Schema.yaml#/components/schemas/TsAndCs'
+                $ref: '#/components/schemas/QuestionDetail'
         '401':
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
         '403':
@@ -342,7 +343,16 @@ paths:
           content:
             application/vnd.api+json:
               schema:
-                $ref: '#/components/schemas/LanguageList'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Language'
+              example:
+                [ 
+                  {languageID: en, languageName: English},
+                  {languageID: cy, languageName: Welsh},
+                  {languageID: ga, languageName: Gaelic (Irish)},
+                  {languageID: gd, languageName: Gaelic (Scottish)}
+                ]
         '401':
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
         '403':
@@ -358,10 +368,10 @@ paths:
         - OAuth2:
             - buyer
             
-  /evidence/questions/{questionID}/languages:
+  /evidence/questions/{questionID}/languages/{languageID}:
     parameters:
       - $ref: '#/components/parameters/questionID'
- 
+      - $ref: '#/components/parameters/languageID'
     put:
       tags:
         - Bank Questions      
@@ -402,10 +412,11 @@ paths:
           description: successful operation
 
     
-  /evidence/questions/{questionID}/options/{optionID}/languages:
+  /evidence/questions/{questionID}/options/{optionID}/languages/{languageID}:
     parameters:
       - $ref: '#/components/parameters/questionID'
       - $ref: '#/components/parameters/optionID'
+      - $ref: '#/components/parameters/languageID'
       
     put:
       tags:
@@ -463,7 +474,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/QuestionSummary'
+                  $ref: '#/components/schemas/QuestionSet'
         '401':
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
         '403':
@@ -626,7 +637,7 @@ paths:
           content:
             application/vnd.api+json:
               schema:
-                $ref: '#/components/schemas/EventTypes'
+                $ref: '#/components/schemas/QuestionSummary'
         '401':
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
         '403':
@@ -1706,9 +1717,15 @@ components:
             allOf:
               - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OCDS_Standards/CCS-OCDS_Schema.yaml#/components/schemas/TenderStatus'
                   
-    LanguageList:
-      $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OCDS_Standards/CCS-OCDS_CodeLists.yaml#/components/schemas/Language'
-
+    
+    Language:
+      type: object
+      properties:
+        languageID:
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OCDS_Standards/CCS-OCDS_CodeLists.yaml#/components/schemas/Language'
+        languageName:
+          type: string
+          
     Translation:      
       type: object
       properties:
@@ -1716,8 +1733,8 @@ components:
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OCDS_Standards/CCS-OCDS_CodeLists.yaml#/components/schemas/Language'
         languageName:
           type: string
-        defaultName:
-          $ref: '#/components/schemas/DefaultName' 
+        transaltion:
+          type: string 
           
              
     DraftProcurementProject:
@@ -1781,9 +1798,9 @@ components:
         This is summary of the questions within a Question Group
       type: object
       properties:
-        id: 
+        questionID: 
           type: string
-        title: 
+        questionText: 
           type: string 
         description: 
           type: string
@@ -1807,11 +1824,11 @@ components:
         This is an allowable response for a single or multi-select question
       type: object
       properties:
-        id: 
+        optionID: 
           type: string
-        title: 
+        optionText: 
           type: string 
-        description: 
+        optionDescription: 
           type: string
           
     QuestionSet:
@@ -1819,11 +1836,11 @@ components:
         This is the details of a questionset which is a container for questions.
       type: object
       properties:
-        id: 
+        questionSetID: 
           type: string
-        title: 
+        questionSetName: 
           type: string 
-        description: 
+        questionSetDescription: 
           type: string
           
     Response:
@@ -1831,7 +1848,7 @@ components:
         This is the details of a questionset which is a container for questions.
       type: object
       properties:
-        id: 
+        responseID: 
           type: string
           
     Document:
