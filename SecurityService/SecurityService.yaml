@@ -214,7 +214,7 @@ paths:
                 #request_uri_not_supported
                 #    The OP does not support use of the request_uri parameter defined in Section 6.
                 #registration_not_supported
-T               #    he OP does not support use of the registration parameter defined in Section 7.2.1.
+                #    he OP does not support use of the registration parameter defined in Section 7.2.1.
 
 
   /security/token:
