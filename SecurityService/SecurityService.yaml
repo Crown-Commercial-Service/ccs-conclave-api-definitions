@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  title: CCS Sercurity Service
+  title: CCS Security Service
   description: This is an example CCS SecurityService Service API.
   termsOfService: 'http://api.crowncommercial.gov.uk/terms/'
   contact:
@@ -214,8 +214,7 @@ paths:
                 #request_uri_not_supported
                 #    The OP does not support use of the request_uri parameter defined in Section 6.
                 #registration_not_supported
-                #    he OP does not support use of the registration parameter defined in Section 7.2.1.
-
+                #    The OP does not support use of the registration parameter defined in Section 7.2.1.
 
   /security/token:
     post:
@@ -237,16 +236,63 @@ paths:
       responses:
         '200':
           description: "When grant type is \"authorization_code\" returns id token,refresh token and access token.\r\n             When grant type is \"refresh_token\" returns id token and access token"
-          content:
-            text/plain:
+          headers:
+            Cache-Control:
               schema:
-                $ref: '#/components/schemas/TokenResponseInfo'
+                description: Forces caches to submit the request to the origin server for validation before releasing a cached copy
+                type: string
+                example: no-store
+            Pragma: 
+              schema:
+                description: Forces caches to submit the request to the origin server for validation before releasing a cached copy
+                type: string
+                enum:
+                  - no-cache
+                example: no-cache
+          content:
             application/json:
               schema:
                 $ref: '#/components/schemas/TokenResponseInfo'
-            text/json:
-              schema:
-                $ref: '#/components/schemas/TokenResponseInfo'
+              examples:
+                authorization_code:
+                  value:
+                    access_token: "SlAV32hkKG"
+                    token_type: "Bearer"
+                    refresh_token: "8xLOxBtZp8"
+                    expires_in: 3600
+                    id_token: >-
+                      eyJhbGciOiJSUzI1NiIsImtpZCI6IjFlOWdkazcifQ.ewogImlzc
+                      yI6ICJodHRwOi8vc2VydmVyLmV4YW1wbGUuY29tIiwKICJzdWIiO
+                      iAiMjQ4jg5NzYxMDAxIiwKICJhdWQiOiAiczZCaGRSa3F0MyIsCi
+                      Aibm9uY2UiOiAibi0wUzZfV3pBMk1qIiwKICJleHAiOiAxMzExMj
+                      gxOTcwLAogImlhdCI6IDEzMTEyODA5NzAKfQ.ggW8hZ1EuVLuxNu
+                      uIJKX_V8a_OMXzR0EHR9R6jgdqrOOF4daGU96Sr_P6qJp6IcmD3H
+                      P99Obi1PRs-cwh3LO-p146waJ8IhehcwL7F09JdijmBqkvPeB2T9
+                      CJNqeGpe-gccMg4vfKjkM8FcGvnzZUN4_KSP0aAp1tOJ1zZwgjxq
+                      GByKHiOtX7TpdQyHE5lcMiKPXfEIQILVq0pc_E2DzL7emopWoaoZ
+                      TF_m0_N0YzFC6g6EJbOEoRoSK5hoDalrcvRYLSrQAZZKflyuVCyi
+                      xEoV9GfNQC3_osjzw2PAithfubEEBLuVVk4XUVrWOLrLl0nx7RkK
+                      U8NXNHq-rvKMzqg"
+                refresh_token:
+                  value:
+                    access_token: "SlAV32hkKG"
+                    token_type: "Bearer"
+                    refresh_token: null
+                    expires_in: 3600
+                    id_token: >-
+                      eyJhbGciOiJSUzI1NiIsImtpZCI6IjFlOWdkazcifQ.ewogImlzc
+                      yI6ICJodHRwOi8vc2VydmVyLmV4YW1wbGUuY29tIiwKICJzdWIiO
+                      iAiMjQ4jg5NzYxMDAxIiwKICJhdWQiOiAiczZCaGRSa3F0MyIsCi
+                      Aibm9uY2UiOiAibi0wUzZfV3pBMk1qIiwKICJleHAiOiAxMzExMj
+                      gxOTcwLAogImlhdCI6IDEzMTEyODA5NzAKfQ.ggW8hZ1EuVLuxNu
+                      uIJKX_V8a_OMXzR0EHR9R6jgdqrOOF4daGU96Sr_P6qJp6IcmD3H
+                      P99Obi1PRs-cwh3LO-p146waJ8IhehcwL7F09JdijmBqkvPeB2T9
+                      CJNqeGpe-gccMg4vfKjkM8FcGvnzZUN4_KSP0aAp1tOJ1zZwgjxq
+                      GByKHiOtX7TpdQyHE5lcMiKPXfEIQILVq0pc_E2DzL7emopWoaoZ
+                      TF_m0_N0YzFC6g6EJbOEoRoSK5hoDalrcvRYLSrQAZZKflyuVCyi
+                      xEoV9GfNQC3_osjzw2PAithfubEEBLuVVk4XUVrWOLrLl0nx7RkK
+                      U8NXNHq-rvKMzqg"
+
         '400':
           description: "Code: INVALID_TOKEN (Refresh token and auth code are empty),\r\nCode: UNSUPPORTED_GRANT_TYPE (Invalid grant type)"
           content:
@@ -1008,26 +1054,43 @@ components:
           nullable: true
       additionalProperties: false
     TokenResponseInfo:
-      type: object
+      ttype: object
       properties:
         access_token:
+          type: string
+          nullable: true
+          example: "SlAV32hkKG"
+        token_type:
+          type: string
+          nullable: true
+          example: "Bearer"
+        refresh_token:
+          type: string
+          nullable: true
+          example: "8xLOxBtZp8"
+        expires_in:
+          type: integer
+          format: int32
+          example: 3600
+        session_state:
           type: string
           nullable: true
         id_token:
           type: string
           nullable: true
-        refresh_token:
-          type: string
-          nullable: true
-        token_type:
-          type: string
-          nullable: true
-        session_state:
-          type: string
-          nullable: true
-        expires_in:
-          type: integer
-          format: int32
+          example: >-
+            eyJhbGciOiJSUzI1NiIsImtpZCI6IjFlOWdkazcifQ.ewogImlzc
+            yI6ICJodHRwOi8vc2VydmVyLmV4YW1wbGUuY29tIiwKICJzdWIiO
+            iAiMjQ4jg5NzYxMDAxIiwKICJhdWQiOiAiczZCaGRSa3F0MyIsCi
+            Aibm9uY2UiOiAibi0wUzZfV3pBMk1qIiwKICJleHAiOiAxMzExMj
+            gxOTcwLAogImlhdCI6IDEzMTEyODA5NzAKfQ.ggW8hZ1EuVLuxNu
+            uIJKX_V8a_OMXzR0EHR9R6jgdqrOOF4daGU96Sr_P6qJp6IcmD3H
+            P99Obi1PRs-cwh3LO-p146waJ8IhehcwL7F09JdijmBqkvPeB2T9
+            CJNqeGpe-gccMg4vfKjkM8FcGvnzZUN4_KSP0aAp1tOJ1zZwgjxq
+            GByKHiOtX7TpdQyHE5lcMiKPXfEIQILVq0pc_E2DzL7emopWoaoZ
+            TF_m0_N0YzFC6g6EJbOEoRoSK5hoDalrcvRYLSrQAZZKflyuVCyi
+            xEoV9GfNQC3_osjzw2PAithfubEEBLuVVk4XUVrWOLrLl0nx7RkK
+            U8NXNHq-rvKMzqg"
       additionalProperties: false
     UserInfo:
       type: object
