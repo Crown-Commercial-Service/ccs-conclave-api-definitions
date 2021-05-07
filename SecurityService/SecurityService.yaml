@@ -1054,7 +1054,7 @@ components:
           nullable: true
       additionalProperties: false
     TokenResponseInfo:
-      ttype: object
+      type: object
       properties:
         access_token:
           type: string
