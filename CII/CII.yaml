@@ -153,7 +153,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/identifierplusId'
+              $ref: '#/components/schemas/IdentifierPlusId'
       responses:
         '200':
           description: Updated
@@ -176,13 +176,6 @@ paths:
         Register a new organisation with the organisation id supplied by the
         user scheme and approved by the user
       operationId: app.postOrg
-      parameters:
-        - in: query
-          name: organisation-id
-          schema:
-            type: string
-          required: false
-          description: Search term
       security:
         - cii_auth:
             - write_users
@@ -200,7 +193,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/CCSOrgID'
+                  $ref: '#/components/schemas/OrganisationId'
         '400':
           description: Bad request
         '409':
@@ -219,9 +212,9 @@ paths:
             - read_users
       parameters:
         - in: query
-          name: ccs_org_id
+          name: organisation-id
           schema:
-            $ref: '#/components/schemas/identifierplusId'
+            $ref: '#/components/schemas/IdentifierPlusId'
           required: true
           description: Scheme Object
       responses:
@@ -235,6 +228,7 @@ paths:
           description: Not found
         '500':
           description: Internal server error
+          
   /identities/organisations/{organisation-id}:
     get:
       tags:
@@ -277,7 +271,7 @@ paths:
         - in: path
           name: organisation-id
           schema:
-            $ref: '#/components/schemas/identifierplusId'
+            $ref: '#/components/schemas/IdentifierPlusId'
           required: true
           description: Scheme Object
       responses:
@@ -351,30 +345,30 @@ components:
           description: The URI of the API provided by the scheme provider
           type: string
           example: 'https://company/...'
-        countrycode:
+        countryCode:
           description: Country code of the scheme provider following ISO8??? standard
           type: string
           example: UK
-        countryname:
+        countryName:
           description: Country name of the scheme provider
           type: string
           example: United Kingdom
-    identifierplusId:
+    IdentifierPlusId:
       type: object
       required:
-        - ccs_org_id
+        - organisation-id
       properties:
-        ccs_org_id:
+        organisation-id:
           description: ccs org id
           type: string
           example: 19700101T000000Z
         identifier:
-          $ref: '#/components/schemas/identifier'
-    identifierArray:
+          $ref: '#/components/schemas/Identifier'
+    IdentifierArray:
       type: array
       items:
-        $ref: '#/components/schemas/identifier'
-    identifier:
+        $ref: '#/components/schemas/Identifier'
+    Identifier:
       type: object
       required:
         - scheme
@@ -412,7 +406,7 @@ components:
             point.
           type: string
           example: 'http://data.companieshouse.gov.uk/doc/company/05606089'
-    identifierplusinactive:
+    IdentifierPlusinActive:
       type: object
       required:
         - scheme
@@ -472,7 +466,7 @@ components:
           type: string
           description: Scheme Provider URL
           example: Scheme Url
-        schemeidentifier:
+        schemeIdentifier:
           type: string
           description: Company Registration Number
           example: '0605456'
@@ -480,12 +474,13 @@ components:
           type: string
           description: Scheme Country Code
           example: GB
-    CCSOrgID:
+          
+    OrganisationId:
       type: object
       required:
-        - CCS_ORG_ID
+        - organisation-id
       properties:
-        ccs_org_id:
+        organisation-id:
           type: string
           description: CCS Organisation ID
           example: 19700101T000000Z
@@ -515,18 +510,18 @@ components:
         - schemeBusTypeId
         - schemeIncDate
         - identifier
-        - additionalidentifiers
+        - additionalIdentifiers
         - address
         - contactPoint
       properties:
         identifier:
           description: identifier
           allOf:
-            - $ref: '#/components/schemas/identifier'
-        additionalidentifiers:
+            - $ref: '#/components/schemas/Identifier'
+        additionalIdentifiers:
           type: array
           items:
-            $ref: '#/components/schemas/identifier'
+            $ref: '#/components/schemas/Identifier'
         address:
           $ref: '#/components/schemas/Address'
         contactPoint:
@@ -544,18 +539,18 @@ components:
         - schemeBusTypeId
         - schemeIncDate
         - identifier
-        - additionalidentifiers
+        - additionalIdentifiers
         - address
         - contactPoint
       properties:
         identifier:
           description: identifier
           allOf:
-            - $ref: '#/components/schemas/identifier'
-        additionalidentifiers:
+            - $ref: '#/components/schemas/Identifier'
+        additionalIdentifiers:
           type: array
           items:
-            $ref: '#/components/schemas/identifier'
+            $ref: '#/components/schemas/Identifier'
     IdentitiesAll:
       type: object
       required:
@@ -566,16 +561,16 @@ components:
         - schemeIncDate
         - name
         - identifier
-        - additionalidentifiers
+        - additionalIdentifiers
         - address
         - contactPoint
       properties:
         identifier:
-          $ref: '#/components/schemas/identifier'
-        additionalidentifiers:
+          $ref: '#/components/schemas/Identifier'
+        additionalIdentifiers:
           type: array
           items:
-            $ref: '#/components/schemas/identifierplusinactive'
+            $ref: '#/components/schemas/IdentifierPlusinActive'
     Address:
       type: object
       required:
