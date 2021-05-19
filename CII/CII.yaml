@@ -1,0 +1,745 @@
+openapi: 3.0.0
+info:
+  description: This is an example CCS Central Identity Index (CII) Service API.
+  version: 1.0.2
+  title: CCS Central Identity Index Service (CII)
+  termsOfService: 'http://api.crowncommercial.gov.uk/terms/'
+  contact:
+    email: apiteam@crowncommercial.gov.uk
+  license:
+    name: Open Government Licence 3.0
+    url: 'https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/'
+tags:
+  - name: identities
+    description: Everything about Organisation Identities
+    externalDocs:
+      description: Find out more
+      url: 'http://apis.crowncommercial.gov.uk'
+paths:
+  /identities/schemes:
+    get:
+      tags:
+        - identities
+      summary: Returns a list of all available scheme providers
+      operationId: app.getscheme
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SchemesDescription'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+  /identities/schemes/{scheme-id}/identifiers/{identifier-id}:
+    get:
+      tags:
+        - identities
+      summary: >-
+        Returns scheme data from external registry and any additional schemes
+        this scheme knows about
+      operationId: app.getschemeidentifiers
+      parameters:
+        - in: query
+          name: scheme
+          schema:
+            type: string
+          required: true
+          description: scheme code e.g. GB-COH
+        - in: query
+          name: id
+          schema:
+            type: string
+          required: true
+          description: id e.g. 05606089
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/IdentitiesFull'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+        '409':
+          description: Duplicate resource
+        '500':
+          description: Internal server error
+  /identities/schemes/manageidentifiers/:
+    get:
+      tags:
+        - identities
+      summary: >-
+        Returns scheme data from external registry and any additional schemes
+        this scheme knows about. Admin (authenticated) add additional identifier
+      operationId: app.getschemeidentifiersMg
+      parameters:
+        - in: query
+          name: scheme
+          schema:
+            type: string
+          required: true
+          description: scheme code e.g. GB-COH
+        - in: query
+          name: id
+          schema:
+            type: string
+          required: true
+          description: id e.g. 05606089
+        - in: query
+          name: ccs_org_id
+          schema:
+            type: string
+          required: true
+          description: id 19700101T000000Z (optional field)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Identities'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+        '409':
+          description: Duplicate resource
+        '500':
+          description: Internal server error
+  '/identities/schemes/organisations/page/{pageno}/pagesize/{pagesize}':
+    get:
+      tags:
+        - identities
+      summary: >-
+        DO NOT USE - Returns all organisations registered against any scheme
+        matching the query string provided
+      operationId: app.getOrgSearch
+      parameters:
+        - in: path
+          name: pageno
+          schema:
+            type: string
+          required: true
+          description: page no
+        - in: path
+          name: pagesize
+          schema:
+            type: string
+          required: true
+          description: page size
+        - in: query
+          name: querystr
+          schema:
+            $ref: '#/components/schemas/SearchQuery'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Identities'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+  /identities/schemes/organisations:
+    post:
+      tags:
+        - identities
+      summary: >-
+        Register a new organisation with the organisation id supplied by the
+        user scheme and approved by the user
+      operationId: app.postOrg
+      security:
+        - cii_auth:
+            - write_users
+            - read_users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Identities'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CCSOrgID'
+        '400':
+          description: Bad request
+        '409':
+          description: Duplicate resource
+        '500':
+          description: Internal server error
+    put:
+      tags:
+        - identities
+      summary: >-
+        Add additional scheme to an organisation if approved by user (make log
+        if duplicate attempt)
+      operationId: app.putOrg
+      security:
+        - cii_auth:
+            - write_users
+            - read_users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/identifierplusId'
+      responses:
+        '200':
+          description: Updated
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+        '409':
+          description: Duplicate resource
+        '500':
+          description: Internal server error
+    delete:
+      tags:
+        - identities
+      summary: Remove an scheme registration from an organisation
+      operationId: app.deleteOrg
+      security:
+        - cii_auth:
+            - write_users
+            - read_users
+      parameters:
+        - in: query
+          name: ccs_org_id
+          schema:
+            $ref: '#/components/schemas/identifierplusId'
+          required: true
+          description: Scheme Object
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+    get:
+      tags:
+        - identities
+      summary: Returns all the schemes associated with the organisation specified
+      operationId: app.getSchemeByOrg
+      parameters:
+        - in: query
+          name: ccs_org_id
+          schema:
+            type: string
+          required: true
+          description: Search term
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Identities'
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+  /identities/schemes/organisations/all:
+    get:
+      tags:
+        - identities
+      summary: >-
+        Returns all the schemes associated with the organisation specified
+        (includes hidden schemes)
+      operationId: app.getAllSchemeByOrg
+      parameters:
+        - in: query
+          name: ccs_org_id
+          schema:
+            type: string
+          required: true
+          description: Search term
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/IdentitiesAll'
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+  '/identities/schemes/{scheme_id}/organisations/page/{pageno}/pagesize/{pagesize}':
+    get:
+      tags:
+        - identities
+      summary: >-
+        DO NOT USE - Returns all organisations registered against the scheme
+        specified
+      operationId: app.getOrgsByScheme
+      security:
+        - cii_auth:
+            - write_users
+            - read_users
+      parameters:
+        - in: path
+          name: pageno
+          schema:
+            type: string
+          required: true
+          description: page no
+        - in: path
+          name: pagesize
+          schema:
+            type: string
+          required: true
+          description: page size
+        - in: path
+          name: scheme_id
+          schema:
+            type: string
+          required: true
+          description: ID of the scheme
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Identities'
+        '400':
+          description: Bad request
+        '404':
+          description: Not Found
+        '500':
+          description: Internal server error
+  /identities/schemes/:
+    delete:
+      tags:
+        - identities
+      summary: Remove ALL scheme registration from an organisation
+      operationId: app.deleteallschmes
+      security:
+        - cii_auth:
+            - write_users
+            - read_users
+      parameters:
+        - in: query
+          name: ccs_org_id
+          schema:
+            $ref: '#/components/schemas/identifierplusId'
+          required: true
+          description: Scheme Object
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+components:
+  schemas:
+    SchemeProvider:
+      type: object
+      required:
+        - scheme
+        - name
+        - uri
+        - countryCode
+        - countryName
+      properties:
+        scheme:
+          description: >-
+            OpenContracting Description: Organization identifiers be drawn from
+            an existing identification scheme. This field is used to indicate
+            the scheme or codelist in which the identifier will be found. This
+            value should be drawn from the Organization identifier Scheme.
+          type: string
+          example: GB-COH
+        name:
+          description: The name of the scheme provider organisation
+          type: string
+          example: Companies House
+        uri:
+          description: The URI of the API provided by the scheme provider
+          type: string
+          example: 'https://company/...'
+        countrycode:
+          description: Country code of the scheme provider following ISO8??? standard
+          type: string
+          example: UK
+        countryname:
+          description: Country name of the scheme provider
+          type: string
+          example: United Kingdom
+    identifierplusId:
+      type: object
+      required:
+        - ccs_org_id
+      properties:
+        ccs_org_id:
+          description: ccs org id
+          type: string
+          example: 19700101T000000Z
+        identifier:
+          $ref: '#/components/schemas/identifier'
+    identifierArray:
+      type: array
+      items:
+        $ref: '#/components/schemas/identifier'
+    identifier:
+      type: object
+      required:
+        - scheme
+        - id
+        - legalName
+        - uri
+      properties:
+        scheme:
+          description: >-
+            OpenContracting Description: Organization identifiers be drawn from
+            an existing identification scheme. This field is used to indicate
+            the scheme or codelist in which the identifier will be found. This
+            value should be drawn from the Organization identifier Scheme.
+          type: string
+          example: GB-COH
+        id:
+          description: >-
+            OpenContracting Description: The identifier of the organization in
+            the selected scheme. The allowed codes are the ones found in
+            “Organisation Registration Agency” codelist of IATI Standard with
+            addition of UA-EDR code for organizations registered in Ukraine
+            (EDRPOU and IPN).
+          type: string
+          example: 05606089
+        legalName:
+          description: ' OpenContracting Description: The legally registered name of the organization'
+          type: string
+          example: Kier Limited
+        uri:
+          description: >-
+            OpenContracting Description: A URI to identify the organization,
+            such as those provided by Open Corporates or some other relevant URI
+            provider. This is not for listing the website of the organization:
+            that can be done through the url field of the Organization contact
+            point.
+          type: string
+          example: 'http://data.companieshouse.gov.uk/doc/company/05606089'
+    identifierplusinactive:
+      type: object
+      required:
+        - scheme
+        - id
+        - legalName
+        - uri
+        - hidden
+      properties:
+        scheme:
+          description: >-
+            OpenContracting Description: Organization identifiers be drawn from
+            an existing identification scheme. This field is used to indicate
+            the scheme or codelist in which the identifier will be found. This
+            value should be drawn from the Organization identifier Scheme.
+          type: string
+          example: GB-COH
+        id:
+          description: >-
+            OpenContracting Description: The identifier of the organization in
+            the selected scheme. The allowed codes are the ones found in
+            “Organisation Registration Agency” codelist of IATI Standard with
+            addition of UA-EDR code for organizations registered in Ukraine
+            (EDRPOU and IPN).
+          type: string
+          example: 05606089
+        legalName:
+          description: ' OpenContracting Description: The legally registered name of the organization'
+          type: string
+          example: Kier Limited
+        uri:
+          description: >-
+            OpenContracting Description: A URI to identify the organization,
+            such as those provided by Open Corporates or some other relevant URI
+            provider. This is not for listing the website of the organization:
+            that can be done through the url field of the Organization contact
+            point.
+          type: string
+          example: 'http://data.companieshouse.gov.uk/doc/company/05606089'
+        hidden:
+          description: Hidden identifiers are only shown to CCS ORG admins
+          type: boolean
+          example: 'true'
+    Schemes:
+      type: object
+      required:
+        - Roles
+      properties:
+        schemeRegisterCode:
+          type: string
+          description: Scheme register coode / Scheme Provider ID
+          example: GB-COH
+        schemeName:
+          type: string
+          description: Scheme Provider Name
+          example: Companies House
+        schemeUrl:
+          type: string
+          description: Scheme Provider URL
+          example: Scheme Url
+        schemeidentifier:
+          type: string
+          description: Company Registration Number
+          example: '0605456'
+        schemeCountryCode:
+          type: string
+          description: Scheme Country Code
+          example: GB
+    CCSOrgID:
+      type: object
+      required:
+        - CCS_ORG_ID
+      properties:
+        ccs_org_id:
+          type: string
+          description: CCS Organisation ID
+          example: 19700101T000000Z
+    SchemesDescription:
+      type: object
+      required:
+        - Roles
+      properties:
+        scheme:
+          type: string
+          description: Scheme register coode / Scheme Provider ID
+          example: GB-COH
+        schemeName:
+          type: string
+          description: Scheme Provider Name
+          example: Companies House
+        schemeCountryCode:
+          type: string
+          description: Scheme Country Code
+          example: GB
+    IdentitiesFull:
+      type: object
+      required:
+        - organisationId
+        - schemeCode
+        - schemeRegNumber
+        - schemeBusTypeId
+        - schemeIncDate
+        - identifier
+        - additionalidentifiers
+        - address
+        - contactPoint
+      properties:
+        identifier:
+          description: identifier
+          allOf:
+            - $ref: '#/components/schemas/identifier'
+        additionalidentifiers:
+          type: array
+          items:
+            $ref: '#/components/schemas/identifier'
+        address:
+          $ref: '#/components/schemas/Address'
+        contactPoint:
+          $ref: '#/components/schemas/ContactPoint'
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/Roles'
+    Identities:
+      type: object
+      required:
+        - organisationId
+        - schemeCode
+        - schemeRegNumber
+        - schemeBusTypeId
+        - schemeIncDate
+        - identifier
+        - additionalidentifiers
+        - address
+        - contactPoint
+      properties:
+        identifier:
+          description: identifier
+          allOf:
+            - $ref: '#/components/schemas/identifier'
+        additionalidentifiers:
+          type: array
+          items:
+            $ref: '#/components/schemas/identifier'
+    IdentitiesAll:
+      type: object
+      required:
+        - organisationId
+        - schemeCode
+        - schemeRegNumber
+        - schemeBusTypeId
+        - schemeIncDate
+        - name
+        - identifier
+        - additionalidentifiers
+        - address
+        - contactPoint
+      properties:
+        identifier:
+          $ref: '#/components/schemas/identifier'
+        additionalidentifiers:
+          type: array
+          items:
+            $ref: '#/components/schemas/identifierplusinactive'
+    Address:
+      type: object
+      required:
+        - streetAddress
+        - locality
+        - region
+        - postalCode
+        - countryName
+      properties:
+        streetAddress:
+          type: string
+          description: 'The street address. '
+          example: 'For example, 1600 Amphitheatre Pkwy'
+        locality:
+          type: string
+          description: The locality.
+          example: Mountain View.
+        region:
+          type: string
+          description: 'The region. '
+          example: CA.
+        postalCode:
+          type: string
+          description: The postal code.
+          example: '94043'
+        countryName:
+          type: string
+          description: The country name.
+          example: United States.
+    ContactPoint:
+      type: object
+      required:
+        - name
+        - email
+        - telephone
+        - faxNumber
+        - url
+      properties:
+        name:
+          type: string
+          description: >-
+            The name of the contact person, department, or contact point, for
+            correspondence relating to this contracting process
+          example: Bob Smith
+        email:
+          type: string
+          description: The e-mail address of the contact point/person.
+          example: bob.smith@company.com
+        telephone:
+          type: string
+          description: >-
+            The telephone number of the contact point/person. This should
+            include the international dialling code.
+          example: 020 7777 7777
+        faxNumber:
+          type: string
+          description: >-
+            The fax number of the contact point/person. This should include the
+            international dialling code.
+          example: 020 7777 7777
+        url:
+          type: string
+          description: A web address for the contact point/person.
+          example: www.linkedin.com/in/.......
+    SearchQuery:
+      type: object
+      required:
+        - legalName
+        - organisationType
+      properties:
+        legalName:
+          description: ' OpenContracting Description: The legally registered name of the organization'
+          type: string
+          example: Kier Limited
+        organisationType:
+          description: 'The of the organization registered with CCS '
+          type: string
+          example: 'Buyer, supplier or Both'
+    OrgResolution:
+      type: object
+      required:
+        - resolutionNotes
+        - outcome
+      properties:
+        resolutionNotes:
+          type: string
+          example: ''
+        outcome:
+          type: string
+          example: ''
+    Roles:
+      type: object
+      required:
+        - Roles
+      properties:
+        name:
+          type: string
+          description: Organisation Roles
+          example: supplier
+  securitySchemes:
+    cii_auth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: 'https://api.ccsexample.com/oauth2/authorize'
+          scopes:
+            'write:users': modify users in your organisation
+            'read:users': read users in your organisation
+servers:
+  - description: SwaggerHub API Auto Mocking
+    url: 'https://virtserver.swaggerhub.com/miahnanu/CII/1.0.1'
