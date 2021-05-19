@@ -37,13 +37,13 @@ paths:
           description: Not found
         '500':
           description: Internal server error
+          
   /identities/schemes/{scheme-id}/identifiers/{identifier-id}:
     get:
       tags:
         - identities
       summary: >-
-        Returns scheme data from external registry and any additional schemes
-        this scheme knows about
+        Returns scheme (identity) data from the user selected external registry  (e.g. DUNS) and any additional schemes this external registry knows about
       operationId: app.getschemeidentifiers
       parameters:
         - in: path
@@ -75,29 +75,28 @@ paths:
           description: Duplicate resource
         '500':
           description: Internal server error
-  /identities/schemes/manageidentifiers/:
+  /identities/organisations/{organisation-id}/schemes/{scheme-id}/identifiers/{identifier-id}:
     get:
       tags:
         - identities
       summary: >-
-        Returns scheme data from external registry and any additional schemes
-        this scheme knows about. Admin (authenticated) add additional identifier
+        Returns all identities registered against given organisation (flag 'all' = including hidden identities)
       operationId: app.getschemeidentifiersMg
       parameters:
-        - in: query
-          name: scheme
+        - in: path
+          name: scheme-id
           schema:
             type: string
           required: true
           description: scheme code e.g. GB-COH
-        - in: query
-          name: id
+        - in: path
+          name: identifier-id
           schema:
             type: string
           required: true
           description: id e.g. 05606089
-        - in: query
-          name: ccs_org_id
+        - in: path
+          name: organisation-id
           schema:
             type: string
           required: true
@@ -119,49 +118,57 @@ paths:
           description: Duplicate resource
         '500':
           description: Internal server error
-  '/identities/schemes/organisations/page/{pageno}/pagesize/{pagesize}':
-    get:
+
+    put:
       tags:
         - identities
       summary: >-
-        DO NOT USE - Returns all organisations registered against any scheme
-        matching the query string provided
-      operationId: app.getOrgSearch
+        Add additional scheme to an organisation if approved by user (make log
+        if duplicate attempt)
+      operationId: app.putOrg
       parameters:
         - in: path
-          name: pageno
+          name: organisation-id
           schema:
             type: string
           required: true
-          description: page no
+          description: Search term
         - in: path
-          name: pagesize
+          name: scheme-id
           schema:
             type: string
           required: true
-          description: page size
-        - in: query
-          name: querystr
+          description: Search term
+        - in: path
+          name: identifier-id
           schema:
-            $ref: '#/components/schemas/SearchQuery'
+            type: string
+          required: true
+          description: Search term
+      security:
+        - cii_auth:
+            - write_users
+            - read_users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/identifierplusId'
       responses:
         '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Identities'
+          description: Updated
         '400':
           description: Bad request
         '401':
           description: Unauthorized
         '404':
           description: Not found
+        '409':
+          description: Duplicate resource
         '500':
           description: Internal server error
-  /identities/schemes/organisations:
+          
+  /identities/organisations:
     post:
       tags:
         - identities
@@ -169,6 +176,13 @@ paths:
         Register a new organisation with the organisation id supplied by the
         user scheme and approved by the user
       operationId: app.postOrg
+      parameters:
+        - in: query
+          name: organisation-id
+          schema:
+            type: string
+          required: false
+          description: Search term
       security:
         - cii_auth:
             - write_users
@@ -193,40 +207,12 @@ paths:
           description: Duplicate resource
         '500':
           description: Internal server error
-    put:
-      tags:
-        - identities
-      summary: >-
-        Add additional scheme to an organisation if approved by user (make log
-        if duplicate attempt)
-      operationId: app.putOrg
-      security:
-        - cii_auth:
-            - write_users
-            - read_users
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/identifierplusId'
-      responses:
-        '200':
-          description: Updated
-        '400':
-          description: Bad request
-        '401':
-          description: Unauthorized
-        '404':
-          description: Not found
-        '409':
-          description: Duplicate resource
-        '500':
-          description: Internal server error
+          
     delete:
       tags:
         - identities
-      summary: Remove an scheme registration from an organisation
-      operationId: app.deleteOrg
+      summary: Remove an identity  from an existing organisation
+      operationId: app.removeIdFrmOrg
       security:
         - cii_auth:
             - write_users
@@ -249,14 +235,15 @@ paths:
           description: Not found
         '500':
           description: Internal server error
+  /identities/organisations/{organisation-id}:
     get:
       tags:
         - identities
       summary: Returns all the schemes associated with the organisation specified
       operationId: app.getSchemeByOrg
       parameters:
-        - in: query
-          name: ccs_org_id
+        - in: path
+          name: organisation-id
           schema:
             type: string
           required: true
@@ -276,7 +263,36 @@ paths:
           description: Not found
         '500':
           description: Internal server error
-  /identities/schemes/organisations/all:
+          
+    delete:
+      tags:
+        - identities
+      summary: Remove ALL scheme registration from an organisation
+      operationId: app.deleteallschmes
+      security:
+        - cii_auth:
+            - write_users
+            - read_users
+      parameters:
+        - in: path
+          name: organisation-id
+          schema:
+            $ref: '#/components/schemas/identifierplusId'
+          required: true
+          description: Scheme Object
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+
+  /identities/organisations/{organisation-id}/all:
     get:
       tags:
         - identities
@@ -285,8 +301,8 @@ paths:
         (includes hidden schemes)
       operationId: app.getAllSchemeByOrg
       parameters:
-        - in: query
-          name: ccs_org_id
+        - in: path
+          name: organisation-id
           schema:
             type: string
           required: true
@@ -306,80 +322,8 @@ paths:
           description: Not found
         '500':
           description: Internal server error
-  '/identities/schemes/{scheme_id}/organisations/page/{pageno}/pagesize/{pagesize}':
-    get:
-      tags:
-        - identities
-      summary: >-
-        DO NOT USE - Returns all organisations registered against the scheme
-        specified
-      operationId: app.getOrgsByScheme
-      security:
-        - cii_auth:
-            - write_users
-            - read_users
-      parameters:
-        - in: path
-          name: pageno
-          schema:
-            type: string
-          required: true
-          description: page no
-        - in: path
-          name: pagesize
-          schema:
-            type: string
-          required: true
-          description: page size
-        - in: path
-          name: scheme_id
-          schema:
-            type: string
-          required: true
-          description: ID of the scheme
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Identities'
-        '400':
-          description: Bad request
-        '404':
-          description: Not Found
-        '500':
-          description: Internal server error
-  /identities/schemes/:
-    delete:
-      tags:
-        - identities
-      summary: Remove ALL scheme registration from an organisation
-      operationId: app.deleteallschmes
-      security:
-        - cii_auth:
-            - write_users
-            - read_users
-      parameters:
-        - in: query
-          name: ccs_org_id
-          schema:
-            $ref: '#/components/schemas/identifierplusId'
-          required: true
-          description: Scheme Object
-      responses:
-        '200':
-          description: OK
-        '400':
-          description: Bad request
-        '401':
-          description: Unauthorized
-        '404':
-          description: Not found
-        '500':
-          description: Internal server error
+          
+
 components:
   schemas:
     SchemeProvider:
