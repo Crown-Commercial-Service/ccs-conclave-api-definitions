@@ -46,14 +46,14 @@ paths:
         this scheme knows about
       operationId: app.getschemeidentifiers
       parameters:
-        - in: query
-          name: scheme
+        - in: path
+          name: scheme-id
           schema:
             type: string
           required: true
           description: scheme code e.g. GB-COH
-        - in: query
-          name: id
+        - in: path
+          name: identifier-id
           schema:
             type: string
           required: true
