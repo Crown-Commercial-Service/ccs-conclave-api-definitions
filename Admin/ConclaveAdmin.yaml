@@ -1,0 +1,196 @@
+openapi: 3.0.1
+
+info:
+  title: Organisation Service API
+  description: Optional multiline or single-line description in [CommonMark](http://commonmark.org/help/) or HTML.
+  version: 1.0.0
+servers:
+  - url: http://api.example.com/v1
+    description: Optional server description, e.g. Main (production) server
+  - url: http://staging-api.example.com
+    description: Optional server description, e.g. Internal staging server for testing
+
+paths:
+  /configurations/contact-reasons:
+    get:
+      tags:
+        - Configuration
+      summary: Allows a user to get contact reasons
+      description: "Sample request:\r\n            \r\n    GET configurations/contact-reasons"
+      responses:
+        '200':
+          description: >- 
+            The 200 (OK) status code indicates that the request has succeeded.
+            The payload sent in a 200 response depends on the request method.
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ContactReasonInfo'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ContactReasonInfo'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ContactReasonInfo'
+        '401':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
+
+  /configurations/identity-providers:
+    get:
+      tags:
+        - Configuration
+      summary: Allows a user to get identity provider details
+      description: "Sample request:\r\n            \r\n    GET configurations/identity-providers"
+      responses:
+        '200':
+          description: >- 
+            The 200 (OK) status code indicates that the request has succeeded.
+            The payload sent in a 200 response depends on the request method.
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/IdentityProviderDetail'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/IdentityProviderDetail'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/IdentityProviderDetail'
+        '401':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
+
+  /configurations/roles:
+    get:
+      tags:
+        - Configuration
+      responses:
+        '200':
+          description: >- 
+            The 200 (OK) status code indicates that the request has succeeded.
+            The payload sent in a 200 response depends on the request method.
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrganisationRole'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrganisationRole'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrganisationRole'
+
+ 
+components:
+  schemas:
+  
+    ContactReasonInfo:
+      type: object
+      properties:
+        key:
+          type: string
+          nullable: true
+        value:
+          type: string
+          nullable: true
+      additionalProperties: false
+      
+    IdentityProviderDetail:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        connectionName:
+          type: string
+          nullable: true
+        name:
+          type: string
+          nullable: true
+      additionalProperties: false
+      
+    RoleEligibleOrgType:
+      enum:
+        - 0
+        - 1
+        - 2
+      type: integer
+      format: int32
+      
+    RoleEligibleSubscriptionType:
+      enum:
+        - 0
+        - 1
+      type: integer
+      format: int32
+      
+    RoleEligibleTradeType:
+      enum:
+        - 0
+        - 1
+        - 2
+      type: integer
+      format: int32
+      
+    OrganisationRole:
+      type: object
+      properties:
+        roleId:
+          type: integer
+          format: int32
+        roleName:
+          type: string
+          nullable: true
+        orgTypeEligibility:
+          $ref: '#/components/schemas/RoleEligibleOrgType'
+        subscriptionTypeEligibility:
+          $ref: '#/components/schemas/RoleEligibleSubscriptionType'
+        tradeEligibility:
+          $ref: '#/components/schemas/RoleEligibleTradeType'
+      additionalProperties: false
+    
+
+   
+  securitySchemes:
+    ApiKey:
+      type: apiKey
+      name: X-API-KEY
+      in: header
+      
+# security:
+#  - ApiKey: []
+  
+#    securitySchemes:
+#    openID:
+#      type: openIdConnect
+#      openIdConnectUrl: 'https://accounts.google.com/.well-known/openid-configuration'
+#    OAuth2:
+#      type: oauth2
+#      flows:
+#        authorizationCode:
+#          authorizationUrl: 'https://accounts.google.com/o/oauth2/v2/auth'
+#          tokenUrl: 'https://oauth2.googleapis.com/token'
+#          scopes:
+#            openid: Standard scope
+#            email: email
+#            profile: profile
+#            supplier: Grants access to act as a supplier
+#            buyer: Grants access to act as a buyer
+#            admin: Grants access to admin operations

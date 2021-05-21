@@ -11,90 +11,7 @@ servers:
     description: Optional server description, e.g. Internal staging server for testing
 
 paths:
-  /configurations/contact-reasons:
-    get:
-      tags:
-        - Configuration
-      summary: Allows a user to get contact reasons
-      description: "Sample request:\r\n            \r\n    GET configurations/contact-reasons"
-      responses:
-        '200':
-          description: >- 
-            The 200 (OK) status code indicates that the request has succeeded.
-            The payload sent in a 200 response depends on the request method.
-          content:
-            text/plain:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ContactReasonInfo'
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ContactReasonInfo'
-            text/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ContactReasonInfo'
-        '401':
-          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
 
-  /configurations/identity-providers:
-    get:
-      tags:
-        - Configuration
-      summary: Allows a user to get identity provider details
-      description: "Sample request:\r\n            \r\n    GET configurations/identity-providers"
-      responses:
-        '200':
-          description: >- 
-            The 200 (OK) status code indicates that the request has succeeded.
-            The payload sent in a 200 response depends on the request method.
-          content:
-            text/plain:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/IdentityProviderDetail'
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/IdentityProviderDetail'
-            text/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/IdentityProviderDetail'
-        '401':
-          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
-  /configurations/roles:
-    get:
-      tags:
-        - Configuration
-      responses:
-        '200':
-          description: >- 
-            The 200 (OK) status code indicates that the request has succeeded.
-            The payload sent in a 200 response depends on the request method.
-          content:
-            text/plain:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/OrganisationRole'
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/OrganisationRole'
-            text/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/OrganisationRole'
   /organisations:
     post:
       tags:
@@ -152,19 +69,14 @@ paths:
         '401':
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
           
-  '/organisations/{organisationId}':
+  '/organisations/{org-id}':
     get:
       tags:
         - Organisation
       summary: Get organisation profile details
       description: "Sample request:\r\n            \r\n    GET /organisations/CiiOrgidId"
       parameters:
-        - name: organisationId
-          in: path
-          required: true
-          schema:
-            type: string
-            nullable: true
+        - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Params.yaml#/components/parameters/OrgParam'
       responses:
         '200':
           description: >- 
@@ -190,12 +102,7 @@ paths:
       summary: Allows a user to update organisation
       description: "Sample request:\r\n            \r\n    PUT /organisations/CiiOrgidId\r\n    {\r\n      \"Identifier\": {\r\n        \"legalName\": \"Kier Limited\",\r\n        \"uri\": \"http://data.companieshouse.gov.uk/doc/company/1\"\r\n      },\r\n      \"address\": {\r\n        \"streetAddress\": \"1600 Amphitheatre Pkwy\",\r\n        \"locality\": \"Mountain View.\",\r\n        \"region\": \"CA.\",\r\n        \"postalCode\": \"94043\",\r\n        \"countryCode\": \"UK\"\r\n      },\r\n      \"Detail\": {\r\n        \"organisationId\": \"CiiOrgidId\",\r\n        \"rightToBuy\": \"true\",\r\n        \"is_sme\": 1,\r\n        \"is_vcse\": 1,\r\n        \"active\": 1\r\n      }\r\n    }"
       parameters:
-        - name: organisationId
-          in: path
-          required: true
-          schema:
-            type: string
-            nullable: true
+        - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Params.yaml#/components/parameters/OrgParam'
       requestBody:
         content:
           application/json:
@@ -239,20 +146,15 @@ paths:
         '404':
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/404NotFound'
 
-          
-  '/organisations/{organisationId}/contacts':
+  '/organisations/{org-id}/contacts':
     post:
       tags:
         - Organisation contact
       summary: Allows a user to create organisation contact
       description: "Sample request:\r\n            \r\n    POST /organisations/1/contact\r\n    {\r\n       \"contactReason\": \"BILLING/SHIPPING\",\r\n       \"name\": \"Test User\",\r\n       \"email\": \"testuser@mail.com\",\r\n       \"phoneNumber\": \"+551155256325\",\r\n       \"fax\": \"9123453\",\r\n       \"webUrl\": \"testuser.com\"\r\n    }"
       parameters:
-        - name: organisationId
-          in: path
-          required: true
-          schema:
-            type: string
-            nullable: true
+        - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Params.yaml#/components/parameters/OrgParam'
+      
       requestBody:
         content:
           application/json:
@@ -320,12 +222,7 @@ paths:
       summary: Allows a user to get organisation contact details
       description: "Sample request:\r\n            \r\n    GET organisations/1/contact"
       parameters:
-        - name: organisationId
-          in: path
-          required: true
-          schema:
-            type: string
-            nullable: true
+        - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Params.yaml#/components/parameters/OrgParam'
         - name: contactType
           in: query
           schema:
@@ -351,25 +248,15 @@ paths:
         '404':
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/404NotFound'
 
-  '/organisations/{organisationId}/contacts/{contactId}':
+  '/organisations/{org-id}/contacts/{contact-id}':
     get:
       tags:
         - Organisation contact
       summary: Allows a user to retrieve details for a given organisation contact
       description: "Sample request:\r\n            \r\n    GET /organisations/1/contact/1"
       parameters:
-        - name: organisationId
-          in: path
-          required: true
-          schema:
-            type: string
-            nullable: true
-        - name: contactId
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int32
+        - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Params.yaml#/components/parameters/OrgParam'
+        - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Params.yaml#/components/parameters/ContactParam'
       responses:
         '200':
           description: >- 
@@ -396,18 +283,8 @@ paths:
       summary: Allows a user to edit organisation contact
       description: "Sample request:\r\n            \r\n    PUT /organisations/1/contact/1\r\n    {\r\n       \"contactReason\": \"BILLING/SHIPPING\",\r\n       \"name\": \"Test User\",\r\n       \"email\": \"testuser@mail.com\",\r\n       \"phoneNumber\": \"+551155256325\",\r\n       \"fax\": \"9123453\",\r\n       \"webUrl\": \"testuser.com\"\r\n    }"
       parameters:
-        - name: organisationId
-          in: path
-          required: true
-          schema:
-            type: string
-            nullable: true
-        - name: contactId
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int32
+        - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Params.yaml#/components/parameters/OrgParam'
+        - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Params.yaml#/components/parameters/ContactParam'
       requestBody:
         content:
           application/json:
@@ -454,13 +331,8 @@ paths:
       summary: Remove a contact from an organisation
       description: "Sample request:\r\n            \r\n    DELETE /organisations/1/contact/1"
       parameters:
-        - name: organisationId
-          in: path
-          required: true
-          schema:
-            type: string
-            nullable: true
-        - name: contactId
+        - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Params.yaml#/components/parameters/OrgParam'
+        - name: contact-id
           in: path
           required: true
           schema:
@@ -474,19 +346,15 @@ paths:
         '404':
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/404NotFound'
 
-  '/organisations/{organisationId}/sites':
+  '/organisations/{org-id}/sites':
+    parameters:
+      - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Params.yaml#/components/parameters/OrgParam'
+      
     post:
       tags:
         - Organisation site
       summary: Allows a user to create organisation site
-      description: "Sample request:\r\n            \r\n    POST /organisations/1/site\r\n    {\r\n      \"siteName\": \"Main Branch\",\r\n      \"address\": {\r\n        \"streetAddress\": \"1600 Amphitheatre Pkwy\",\r\n        \"locality\": \"Mountain View.\",\r\n        \"region\": \"CA.\",\r\n        \"postalCode\": \"94043\",\r\n        \"countryCode\": \"UK\"\r\n      }\r\n    }"
-      parameters:
-        - name: organisationId
-          in: path
-          required: true
-          schema:
-            type: string
-            nullable: true
+      description: "Sample request:\r\n            \r\n    POST /organisations/1/site\r\n    {\r\n      \"siteName\": \"Main Branch\",\r\n      \"address\": {\r\n        \"streetAddress\": \"1600 Amphitheatre Pkwy\",\r\n        \"locality\": \"Mountain View.\",\r\n        \"region\": \"CA.\",\r\n        \"postalCode\": \"94043\",\r\n        \"countryCode\": \"UK\"\r\n      }\r\n    }"  
       requestBody:
         content:
           application/json:
@@ -546,13 +414,6 @@ paths:
         - Organisation site
       summary: Allows a user to get all the sites in an organisation
       description: "Sample request:\r\n            \r\n    GET /organisations/1/site"
-      parameters:
-        - name: organisationId
-          in: path
-          required: true
-          schema:
-            type: string
-            nullable: true
       responses:
         '200':
           description: >- 
@@ -574,25 +435,15 @@ paths:
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/404NotFound'
 
           
-  '/organisations/{organisationId}/sites/{siteId}':
+  '/organisations/{org-id}/sites/{site-id}':
+    parameters:
+      - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Params.yaml#/components/parameters/OrgParam'
+      - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Params.yaml#/components/parameters/OrgSiteParam'
     get:
       tags:
         - Organisation site
       summary: Allows a user to get organisation site details
       description: "Sample request:\r\n            \r\n    GET /organisations/1/site/1"
-      parameters:
-        - name: organisationId
-          in: path
-          required: true
-          schema:
-            type: string
-            nullable: true
-        - name: siteId
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int32
       responses:
         '200':
           description: >- 
@@ -618,19 +469,6 @@ paths:
         - Organisation site
       summary: Allows a user to update organisation site
       description: "Sample request:\r\n            \r\n    PUT /organisations/1/site/1\r\n    {\r\n      \"siteName\": \"Main Branch\",\r\n      \"address\": {\r\n        \"streetAddress\": \"1600 Amphitheatre Pkwy\",\r\n        \"locality\": \"Mountain View.\",\r\n        \"region\": \"CA.\",\r\n        \"postalCode\": \"94043\",\r\n        \"countryCode\": \"UK\"\r\n      }\r\n    }"
-      parameters:
-        - name: organisationId
-          in: path
-          required: true
-          schema:
-            type: string
-            nullable: true
-        - name: siteId
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int32
       requestBody:
         content:
           application/json:
@@ -675,19 +513,6 @@ paths:
         - Organisation site
       summary: Allows a user to delete organisation site
       description: "Sample request:\r\n            \r\n    DELETE /organisations/1/site/1"
-      parameters:
-        - name: organisationId
-          in: path
-          required: true
-          schema:
-            type: string
-            nullable: true
-        - name: siteId
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int32
       responses:
         '200':
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/200Success'
@@ -696,25 +521,15 @@ paths:
         '404':
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/404NotFound'
 
-  '/organisations/{organisationId}/sites/{siteId}/contacts':
+  '/organisations/{org-id}/sites/{site-id}/contacts':
     post:
       tags:
         - Organisation site contact
       summary: Allows a user to create organisation site contact
       description: "Sample request:\r\n            \r\n    POST /organisations/1/site/1/contact\r\n    {\r\n       \"contactReason\": \"BILLING/SHIPPING\",\r\n       \"name\": \"Test User\",\r\n       \"email\": \"testuser@mail.com\",\r\n       \"phoneNumber\": \"+551155256325\",\r\n       \"fax\": \"9123453\",\r\n       \"webUrl\": \"testuser.com\"\r\n    }"
       parameters:
-        - name: organisationId
-          in: path
-          required: true
-          schema:
-            type: string
-            nullable: true
-        - name: siteId
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int32
+        - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Params.yaml#/components/parameters/OrgParam'
+        - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Params.yaml#/components/parameters/OrgSiteParam'
       requestBody:
         content:
           application/json:
@@ -776,18 +591,8 @@ paths:
       summary: Allows a user to get list of contacts for organisation site
       description: "Sample request:\r\n            \r\n    GET organisations/1/site/1/contact"
       parameters:
-        - name: organisationId
-          in: path
-          required: true
-          schema:
-            type: string
-            nullable: true
-        - name: siteId
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int32
+        - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Params.yaml#/components/parameters/OrgParam'
+        - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Params.yaml#/components/parameters/OrgSiteParam'
         - name: contactType
           in: query
           schema:
@@ -813,31 +618,16 @@ paths:
         '404':
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/404NotFound'
 
-  '/organisations/{organisationId}/sites/{siteId}/contacts/{contactId}':
+  '/organisations/{org-id}/sites/{site-id}/contacts/{contact-id}':
+    parameters:
+      - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Params.yaml#/components/parameters/OrgParam'
+      - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Params.yaml#/components/parameters/OrgSiteParam'
+      - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Params.yaml#/components/parameters/ContactParam'
     get:
       tags:
         - Organisation site contact
       summary: Allows a user to retrieve details for a given organisation site contact
       description: "Sample request:\r\n            \r\n    GET /organisations/1/site/1/contact/1"
-      parameters:
-        - name: organisationId
-          in: path
-          required: true
-          schema:
-            type: string
-            nullable: true
-        - name: siteId
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int32
-        - name: contactId
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int32
       responses:
         '200':
           description: >- 
@@ -863,25 +653,6 @@ paths:
         - Organisation site contact
       summary: Allows a user to edit organisation site contact
       description: "Sample request:\r\n            \r\n    PUT /organisations/1/site/1/contact/1\r\n    {\r\n       \"contactReason\": \"BILLING/SHIPPING\",\r\n       \"name\": \"Test User\",\r\n       \"email\": \"testuser@mail.com\",\r\n       \"phoneNumber\": \"+551155256325\",\r\n       \"fax\": \"9123453\",\r\n       \"webUrl\": \"testuser.com\"\r\n    }"
-      parameters:
-        - name: organisationId
-          in: path
-          required: true
-          schema:
-            type: string
-            nullable: true
-        - name: siteId
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int32
-        - name: contactId
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int32
       requestBody:
         content:
           application/json:
@@ -927,25 +698,6 @@ paths:
         - Organisation site contact
       summary: Remove a contact from an organisation site
       description: "Sample request:\r\n            \r\n    DELETE /organisations/1/site/1/contact/1"
-      parameters:
-        - name: organisationId
-          in: path
-          required: true
-          schema:
-            type: string
-            nullable: true
-        - name: siteId
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int32
-        - name: contactId
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int32
       responses:
         '200':
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/200Success'
@@ -954,19 +706,14 @@ paths:
         '404':
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/404NotFound'
 
-  '/organisations/{organisationId}/user':
+  '/organisations/{org-id}/users':
     get:
       tags:
         - Organisation User
       summary: Allows a user to retrieve users for a given organisation
       description: "Sample request:\r\n            \r\n    GET /organisations/1?userId=user@mail.com,pageSize=10,currentPage=1"
       parameters:
-        - name: organisationId
-          in: path
-          required: true
-          schema:
-            type: string
-            nullable: true
+        - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Params.yaml#/components/parameters/OrgParam'
         - name: PageSize
           in: query
           schema:
@@ -1002,19 +749,14 @@ paths:
         '404':
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/404NotFound'
 
-  '/organisations/{organisationId}/groups':
+  '/organisations/{org-id}/groups':
     post:
       tags:
         - Organisation Group
       summary: Create organisation group
       description: "Sample request:\r\n            \r\n    POST /organisations/1/groups\r\n    {\r\n      'groupName': \"Group Name\"\r\n    }"
       parameters:
-        - name: organisationId
-          in: path
-          required: true
-          schema:
-            type: string
-            nullable: true
+        - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Params.yaml#/components/parameters/OrgParam'
       requestBody:
         content:
           application/json:
@@ -1076,12 +818,7 @@ paths:
       summary: Get organisation groups
       description: "Sample request:\r\n            \r\n    GET /organisations/1/groups"
       parameters:
-        - name: organisationId
-          in: path
-          required: true
-          schema:
-            type: string
-            nullable: true
+        - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Params.yaml#/components/parameters/OrgParam'
         - name: searchString
           in: query
           schema:
@@ -1107,20 +844,15 @@ paths:
         '404':
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/404NotFound'
 
-  '/organisations/{organisationId}/groups/{groupId}':
+  '/organisations/{org-id}/groups/{group-id}':
     delete:
       tags:
         - Organisation Group
       summary: Delete organisation group
       description: "Sample request:\r\n            \r\n    DELETE /organisations/1/groups/1"
       parameters:
-        - name: organisationId
-          in: path
-          required: true
-          schema:
-            type: string
-            nullable: true
-        - name: groupId
+        - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Params.yaml#/components/parameters/OrgParam'
+        - name: group-id
           in: path
           required: true
           schema:
@@ -1140,13 +872,8 @@ paths:
       summary: Get organisation group
       description: "Sample request:\r\n            \r\n    GET /organisations/1/groups/1"
       parameters:
-        - name: organisationId
-          in: path
-          required: true
-          schema:
-            type: string
-            nullable: true
-        - name: groupId
+        - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Params.yaml#/components/parameters/OrgParam'
+        - name: group-id
           in: path
           required: true
           schema:
@@ -1178,13 +905,8 @@ paths:
       summary: Update organisation group
       description: "Sample requests:\r\n            \r\n    PATCH /organisations/1/groups/1\r\n    {\r\n      'groupName': \"Group Name\",\r\n      'roleInfo': null,\r\n      'userInfo': null\r\n    }\r\n            \r\n    PATCH /organisations/1/groups/1\r\n    {\r\n      'groupName': \"\",\r\n      'roleInfo':{\r\n          'addedRoleIds': [ 1, 2 ],\r\n          'removedRoleIds': [ 3 ]\r\n       },\r\n      'userInfo':{\r\n          'addedUserIds': [ \"user1@mail.com\", \"user2@mail.com\" ],\r\n          'addedUserIds': [ \"user3@mail.com\" ]\r\n       }\r\n    }\r\n            \r\n    PATCH /organisations/1/groups/1\r\n    {\r\n      'groupName': null,\r\n      'roleInfo':{\r\n          'addedRoleIds': [ 1, 2 ],\r\n          'removedRoleIds': [ 3 ]\r\n       },\r\n      'userInfo':{\r\n          'addedUserIds': [ \"user1@mail.com\", \"user2@mail.com\" ],\r\n          'addedUserIds': [ \"user3@mail.com\" ]\r\n       }\r\n    }\r\n            \r\n    PATCH /organisations/1/groups/1\r\n    {\r\n      'groupName': \"Group Name\",\r\n      'roleInfo': null,\r\n      'userInfo':{\r\n          'addedUserIds': [ \"user1@mail.com\", \"user2@mail.com\" ],\r\n          'addedUserIds': [ \"user3@mail.com\" ]\r\n       }\r\n    }\r\n            \r\n    PATCH /organisations/1/groups/1\r\n    {\r\n      'groupName': \"Group Name\",\r\n      'roleInfo':{\r\n          'addedRoleIds': [ 1, 2 ],\r\n          'removedRoleIds': [ 3 ]\r\n       },\r\n      'userInfo': null\r\n    }"
       parameters:
-        - name: organisationId
-          in: path
-          required: true
-          schema:
-            type: string
-            nullable: true
-        - name: groupId
+        - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Params.yaml#/components/parameters/OrgParam'
+        - name: group-id
           in: path
           required: true
           schema:
@@ -1231,19 +953,14 @@ paths:
         '409':
           description: Resource already exists
           
-  '/organisations/{organisationId}/identity-providers':
+  '/organisations/{org-id}/identity-providers':
     get:
       tags:
         - Organisation
       summary: Allows a user to get identity provider details of an organisation
       description: "Sample request:\r\n            \r\n    GET organisations/1/identity-providers"
       parameters:
-        - name: organisationId
-          in: path
-          required: true
-          schema:
-            type: string
-            nullable: true
+        - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Params.yaml#/components/parameters/OrgParam'
       responses:
         '200':
           description: >- 
@@ -1270,17 +987,12 @@ paths:
         '404':
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/404NotFound'
 
-  '/organisations/{organisationId}/identity-providers/update':
+  '/organisations/{org-id}/identity-providers/update':
     put:
       tags:
         - Organisation
       parameters:
-        - name: organisationId
-          in: path
-          required: true
-          schema:
-            type: string
-            nullable: true
+        - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Params.yaml#/components/parameters/OrgParam'
         - name: idpName
           in: query
           schema:
@@ -1311,19 +1023,14 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/IdentityProviderDetail'
-  '/organisations/{organisationId}/roles':
+  '/organisations/{org-id}/roles':
     get:
       tags:
         - Organisation
       summary: Get organisation roles
       description: "Sample request:\r\n            \r\n    GET /organisations/1/roles"
       parameters:
-        - name: organisationId
-          in: path
-          required: true
-          schema:
-            type: string
-            nullable: true
+        - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Params.yaml#/components/parameters/OrgParam'
       responses:
         '200':
           description: >- 
@@ -1350,12 +1057,12 @@ paths:
         '404':
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/404NotFound'
 
-  '/organisations/{ciiOrganisationId}/eligableRoles':
+  '/organisations/{cii-organisation-id}/eligableRoles':
     get:
       tags:
         - Organisation
       parameters:
-        - name: ciiOrganisationId
+        - name: cii-organisation-id
           in: path
           required: true
           schema:
@@ -1383,12 +1090,12 @@ paths:
                 items:
                   $ref: '#/components/schemas/OrganisationRole'
                   
-  '/organisations/{ciiOrganisationId}/updateEligableRoles':
+  '/organisations/{cii-organisation-id}/updateEligableRoles':
     put:
       tags:
         - Organisation
       parameters:
-        - name: ciiOrganisationId
+        - name: cii-organisation-id
           in: path
           required: true
           schema:
@@ -1412,16 +1119,7 @@ paths:
   
 components:
   schemas:
-    ContactReasonInfo:
-      type: object
-      properties:
-        key:
-          type: string
-          nullable: true
-        value:
-          type: string
-          nullable: true
-      additionalProperties: false
+    
     IdentityProviderDetail:
       type: object
       properties:
@@ -1471,63 +1169,7 @@ components:
         tradeEligibility:
           $ref: '#/components/schemas/RoleEligibleTradeType'
       additionalProperties: false
-    OrganisationIdentifier:
-      type: object
-      properties:
-        id:
-          type: string
-          nullable: true
-        legalName:
-          type: string
-          nullable: true
-        uri:
-          type: string
-          nullable: true
-        scheme:
-          type: string
-          nullable: true
-      additionalProperties: false
-    OrganisationAddress:
-      $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OCDS_Standards/CCS-OCDS_Schema.yaml#/components/schemas/Address'
-      #type: object
-      #properties:
-      #  streetAddress:
-      #    type: string
-      #    nullable: true
-      #  locality:
-      #    type: string
-      #    nullable: true
-      #  region:
-      #    type: string
-      #    nullable: true
-      #  postalCode:
-      #    type: string
-      #    nullable: true
-      #  countryCode:
-      #    type: string
-      #    nullable: true
-      additionalProperties: false
-    OrganisationDetail:
-      type: object
-      properties:
-        organisationId:
-          type: string
-          nullable: true
-        creationDate:
-          type: string
-          nullable: true
-        companyType:
-          type: string
-          nullable: true
-        isSme:
-          type: boolean
-        isVcse:
-          type: boolean
-        rightToBuy:
-          type: boolean
-        isActive:
-          type: boolean
-      additionalProperties: false
+    
       
     OrganisationProfileInfo:
       # $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OCDS_Standards/CCS-OCDS_Schema.yaml#/components/schemas/Organization'
@@ -1572,7 +1214,7 @@ components:
         address:
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OCDS_Standards/CCS-OCDS_Schema.yaml#/components/schemas/Address'
         detail:
-          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OCDS_Standards/CCS-OCDS_Schema.yaml#/components/schemas/OrganisationDetail'
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OCDS_Standards/CCS-OCDS_Schema.yaml#/components/schemas/OrganizationDetail'
       additionalProperties: false
       
       
@@ -1886,178 +1528,7 @@ components:
             $ref: '#/components/schemas/OrganisationRole'
           nullable: true
       additionalProperties: false
-    UserTitle:
-      enum:
-        - 0
-        - 1
-        - 2
-        - 3
-        - 4
-      type: integer
-      format: int32
-    UserDetail:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int32
-        userName:
-          type: string
-          nullable: true
-      additionalProperties: false
-    UserProfileEditRequestInfo:
-      type: object
-      properties:
-        organisationId:
-          type: string
-          nullable: true
-        firstName:
-          type: string
-          nullable: true
-        lastName:
-          type: string
-          nullable: true
-        title:
-          $ref: '#/components/schemas/UserTitle'
-        groupIds:
-          type: array
-          items:
-            type: integer
-            format: int32
-          nullable: true
-        roleIds:
-          type: array
-          items:
-            type: integer
-            format: int32
-          nullable: true
-        identityProviderId:
-          type: integer
-          format: int32
-        detail:
-          $ref: '#/components/schemas/UserDetail'
-      additionalProperties: false
-    UserEditResponseInfo:
-      type: object
-      properties:
-        userId:
-          type: string
-          nullable: true
-        isRegisteredInIdam:
-          type: boolean
-      additionalProperties: false
-    GroupAccessRole:
-      type: object
-      properties:
-        groupId:
-          type: integer
-          format: int32
-        accessRole:
-          type: string
-          nullable: true
-        accessRoleName:
-          type: string
-          nullable: true
-        group:
-          type: string
-          nullable: true
-      additionalProperties: false
-    UserProfileResponseInfo:
-      type: object
-      properties:
-        organisationId:
-          type: string
-          nullable: true
-        firstName:
-          type: string
-          nullable: true
-        lastName:
-          type: string
-          nullable: true
-        title:
-          $ref: '#/components/schemas/UserTitle'
-        groupIds:
-          type: array
-          items:
-            type: integer
-            format: int32
-          nullable: true
-        roleIds:
-          type: array
-          items:
-            type: integer
-            format: int32
-          nullable: true
-        identityProviderId:
-          type: integer
-          format: int32
-        detail:
-          $ref: '#/components/schemas/UserDetail'
-        identityProvider:
-          type: string
-          nullable: true
-        identityProviderDisplayName:
-          type: string
-          nullable: true
-        userGroups:
-          type: array
-          items:
-            $ref: '#/components/schemas/GroupAccessRole'
-          nullable: true
-        canChangePassword:
-          type: boolean
-        roleNames:
-          type: array
-          items:
-            type: string
-          nullable: true
-      additionalProperties: false
-    UserContactInfoList:
-      type: object
-      properties:
-        userId:
-          type: string
-          nullable: true
-        organisationId:
-          type: string
-          nullable: true
-        contactsList:
-          type: array
-          items:
-            $ref: '#/components/schemas/ContactResponseInfo'
-          nullable: true
-      additionalProperties: false
-    UserContactInfo:
-      type: object
-      properties:
-        contactReason:
-          type: string
-          nullable: true
-        name:
-          type: string
-          nullable: true
-        email:
-          type: string
-          nullable: true
-        phoneNumber:
-          type: string
-          nullable: true
-        fax:
-          type: string
-          nullable: true
-        webUrl:
-          type: string
-          nullable: true
-        contactId:
-          type: integer
-          format: int32
-        userId:
-          type: string
-          nullable: true
-        organisationId:
-          type: string
-          nullable: true
-      additionalProperties: false
+
       
   securitySchemes:
     ApiKey:
