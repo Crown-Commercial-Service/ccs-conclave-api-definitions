@@ -637,7 +637,9 @@ paths:
           content:
             application/vnd.api+json:
               schema:
-                $ref: '#/components/schemas/QuestionSummary'
+                type: array
+                items:
+                  $ref: '#/components/schemas/QuestionSummary'
         '401':
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
         '403':
@@ -735,7 +737,10 @@ paths:
           content:
             application/vnd.api+json:
               schema:
-                $ref: '#/components/schemas/DefaultName'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Event' 
+              
         '401':
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
         '403':
@@ -1302,12 +1307,12 @@ paths:
           description: successful operation
       
 
-  /evidence/events/{event-id}/questionsets/{question-set-id}/questions/{question-id}/responses/{supplier-id}:     
+  /evidence/events/{event-id}/questionsets/{question-set-id}/questions/{question-id}/responses/{responder-id}:     
     parameters:
       - $ref: '#/components/parameters/EventId'
       - $ref: '#/components/parameters/QuestionSetId'
       - $ref: '#/components/parameters/QuestionId'
-      - $ref: '#/components/parameters/SupplierId'
+      - $ref: '#/components/parameters/ResponderId'
       
     put:
       tags:
@@ -1386,7 +1391,9 @@ paths:
           content:
             application/vnd.api+json:
               schema:
-                $ref: '#/components/schemas/DefaultName'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Responder'
         '401':
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
         '403':
@@ -1419,7 +1426,9 @@ paths:
           content:
             application/vnd.api+json:
               schema:
-                $ref: '#/components/schemas/DefaultName'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Responder'
         '401':
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
         '403':
@@ -1435,12 +1444,12 @@ paths:
             - buyer
       summary: Get Question Responses
       
-  /evidence/events/{event-id}/questionsets/{question-set-id}/questions/{question-id}/responses/{supplier-id}/documents:     
+  /evidence/events/{event-id}/questionsets/{question-set-id}/questions/{question-id}/responses/{responder-id}/documents:     
     parameters:
       - $ref: '#/components/parameters/EventId'
       - $ref: '#/components/parameters/QuestionSetId'
       - $ref: '#/components/parameters/QuestionId'
-      - $ref: '#/components/parameters/SupplierId'
+      - $ref: '#/components/parameters/ResponderId'
       
     get:
       description: Get responded supplier ID and names for the given question.
@@ -1454,7 +1463,9 @@ paths:
           content:
             application/vnd.api+json:
               schema:
-                $ref: '#/components/schemas/DefaultName'
+                type: array
+                items:
+                    $ref: '#/components/schemas/Document'
         '401':
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
         '403':
@@ -1470,12 +1481,12 @@ paths:
             - buyer
       summary: Get Response Documents
       
-  /evidence/events/{event-id}/questionsets/{question-set-id}/questions/{question-id}/responses/{supplier-id}/documents/{document-id}:     
+  /evidence/events/{event-id}/questionsets/{question-set-id}/questions/{question-id}/responses/{responder-id}/documents/{document-id}:     
     parameters:
       - $ref: '#/components/parameters/EventId'
       - $ref: '#/components/parameters/QuestionSetId'
       - $ref: '#/components/parameters/QuestionId'
-      - $ref: '#/components/parameters/SupplierId'
+      - $ref: '#/components/parameters/ResponderId'
       - $ref: '#/components/parameters/DocumentId'
       
     get:
@@ -1490,7 +1501,7 @@ paths:
           content:
             application/vnd.api+json:
               schema:
-                $ref: '#/components/schemas/DefaultName'
+                $ref: '#/components/schemas/Document'
         '401':
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
         '403':
@@ -1600,13 +1611,13 @@ components:
       schema:
         $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Schema.yaml#/components/schemas/GenericId'
         
-    SupplierId:
-      name: supplier-id
+    ResponderId:
+      name: responder-id
       in: path
       required: true
-      description: Supplier ID
+      description: Responder ID
       schema:
-        $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Schema.yaml#/components/schemas/GenericId'
+        $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Schema.yaml#/components/schemas/OrgId'
         
     LanguageParam:
       $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Params.yaml#/components/parameters/LanguageParam'
@@ -1679,40 +1690,6 @@ components:
             example: 00013579
             description: itt_2468 mapped to CaT (event-id) 00013579 
             
-    EventStatus:
-      description: >-
-        Generic term for an event put out to the market. Each is an optional procurement step in the procurement process. This casll shows the current status of each in the procurement process.
-      type: array
-      items:
-        type: object
-        properties:
-          projectId: 
-            type: string
-            example: 00002468
-            description: project_1055 mapped to CaT (project ID) 00002468
-          eventId: 
-            type: string
-            example: 00013579
-            description: itt_2468 mapped to CaT (event-id) 00013579 
-          ocid:
-            type: string
-          supportId:
-            type: string
-            example: itt_2468
-            description: ID to allow support staff to support this event. 
-          name:
-            type: string
-            example: RM6118-Lot 2-Crown Commercial Services
-            description: Name of the event.
-          type:
-            allOf:
-              - $ref: '#/components/schemas/EventType'
-            example: RFP
-          status:
-            type: string
-            allOf:
-              - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OCDS_Standards/CCS-OCDS_Schema.yaml#/components/schemas/TenderStatus'
-                  
     
     Language:
       type: object
@@ -1726,41 +1703,16 @@ components:
       type: object
       properties:
         languageId:
-          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OCDS_Standards/CCS-OCDS_CodeLists.yaml#/components/schemas/Language'
+          allOf:
+            - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OCDS_Standards/CCS-OCDS_CodeLists.yaml#/components/schemas/Language'
+          readOnly: true
         languageName:
           type: string
-        transaltion:
-          type: string 
-          
-             
-    DraftProcurementProject:
-      type: object
-      properties:
-        pocurementId:
-          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Schema.yaml#/components/schemas/GenericId'
-        eventId:
-          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Schema.yaml#/components/schemas/GenericId'
-        defaultName:
-          $ref: '#/components/schemas/DefaultName'
-              
-    DefaultName:
-      type: object
-      properties:
-        name:
+          readOnly: true
+        translation:
           type: string
-          example: <org>-<agreement>-<ID>
-        components:
-          type: object
-          properties:
-            org:
-              type: string
-              example: <org>
-            agreement:
-              type: string
-              example: <agreement>
-            identifier:
-              $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Schema.yaml#/components/schemas/GenericId'
-              
+          
+                         
     EvalCriteria:
       description: >-
         Details of an Evaluation type. This is known as an Envelope or Criterion
@@ -1774,17 +1726,6 @@ components:
           description: 
             type: string  
             
-            
-    QuestionGroup:
-      description: >-
-        This is an arbitrary grouping of questions to make it within an individual Evaluation. Known as a Requirement Group in OCDS
-      type: object
-      properties:
-        questionGroupId: 
-          type: string
-          readOnly: true
-        description: 
-          type: string 
           
     QuestionType:
       $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/OCDS/OCDS_CodeLists_Ext.yaml#/components/schemas/DataType'
@@ -1834,6 +1775,7 @@ components:
       properties:
         questionSetId: 
           type: string
+          readOnly: true
         questionSetName: 
           type: string 
         questionSetDescription: 
@@ -1847,13 +1789,19 @@ components:
         responseId: 
           type: string
           
-    Document:
+    Responder:
+      allOf:
+        - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OCDS_Standards/CCS-OCDS_Schema.yaml#/components/schemas/OrganizationReference'
       description: >-
-        This is the details of a questionset which is a container for questions.
-      type: object
-      properties:
-        documentId: 
-          type: string
+        This is the details of a responder to an event or question.
+
+          
+    Document:
+      allOf:
+        - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OCDS_Standards/CCS-OCDS_Schema.yaml#/components/schemas/Document'
+      description: >-
+        A document provided in response to a question.
+
                     
   securitySchemes:
     openID:
