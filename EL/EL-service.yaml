@@ -24,9 +24,7 @@ paths:
         name: "filter"
         schema:
           type: string
-          format: date-time
-        example: "dd/mm/yy:hh:mm:ss"
-        description: "Date and Time stamp of last successful run."
+        description: "Filter criteria TBD"
       responses:
         '200':
           content:
@@ -231,6 +229,40 @@ paths:
     parameters:
       - $ref: '#/components/parameters/QuestionId'
 
+    get:
+      description: Get options that the user can select from to answer a question.
+      tags:
+        - Bank Questions  
+      operationId: listBankOptions
+      responses:
+        '200':
+          description: ok
+          content:
+            application/vnd.api+json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/QuestionOption'
+        '401':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
+        '403':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/403Forbidden'
+        '429':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/429TooManyRequests'
+        '500':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/500InternalServerError'
+        '502':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/502BadGateway'
+      summary: List question options
+      security:
+        - OAuth2:
+            - buyer
+            
+  /evidence/questions/{question-id}/options/{option-id}:
+    parameters:
+      - $ref: '#/components/parameters/QuestionId'
+      - $ref: '#/components/parameters/OptionId'
+      
     put:
       tags:
         - Bank Questions      
@@ -269,41 +301,6 @@ paths:
         default:
           description: successful operation
       summary: Add or update option.
-      
-    
-    get:
-      description: Get options that the user can select from to answer a question.
-      tags:
-        - Bank Questions  
-      operationId: listBankOptions
-      responses:
-        '200':
-          description: ok
-          content:
-            application/vnd.api+json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/QuestionOption'
-        '401':
-          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
-        '403':
-          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/403Forbidden'
-        '429':
-          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/429TooManyRequests'
-        '500':
-          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/500InternalServerError'
-        '502':
-          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/502BadGateway'
-      summary: List question options
-      security:
-        - OAuth2:
-            - buyer
-            
-  /evidence/questions/{question-id}/options/{option-id}:
-    parameters:
-      - $ref: '#/components/parameters/QuestionId'
-      - $ref: '#/components/parameters/OptionId'
             
     delete:
       description: Delete an option that the user can select from to answer a question.
@@ -461,11 +458,17 @@ paths:
       
   /evidence/questionsets:
     get:
+      parameters:
+      - in: query
+        name: "filter"
+        schema:
+          type: string
+        description: "Filter criteria TBD"
       description: "Retrieve all questions in the bank that meet the filter criteria"
       summary: Get bank questionsets.
       tags:
         - Bank Question Sets
-      operationId: listBankQuestionSets 
+      operationId: listBankQuestionSets
       responses:
         '200':
           description: ok
@@ -723,10 +726,43 @@ paths:
       summary: Delete Questions in QuestionSet in the 'Bank'.
       
       
-
+  /evidence/events/types:
+    get:
+      description: Get List of evidence events types allowed.
+      tags:
+        - Evidence Events
+      operationId: getEvidenceEventTypes
+      responses:
+        '200':
+          description: ok
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/EventTypes' 
+              
+        '401':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
+        '403':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/403Forbidden'
+        '429':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/429TooManyRequests'
+        '500':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/500InternalServerError'
+        '502':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/502BadGateway'
+      security:
+        - OAuth2:
+            - buyer
+      summary: Get evidence events
       
   /evidence/events:
     get:
+      parameters:
+      - in: query
+        name: "filter"
+        schema:
+          type: string
+        description: "Filter criteria TBD"
       description: Get evidence events relevant to the user.
       tags:
         - Evidence Events
@@ -1316,9 +1352,9 @@ paths:
       
     put:
       tags:
-        - Evidence Event Respond      
+        - Evidence Event Response     
       description: Add/Edit a response to a question as part of a questionset.
-      summary: Event Response
+      summary: Update Event Response
       operationId: EventResponse
       requestBody:
         content:
@@ -1356,7 +1392,7 @@ paths:
     delete:
       description: Delete a response from a question as part of a questionset.
       tags:
-        - Evidence Event Respond
+        - Evidence Event Response
       operationId: deleteEventResponse
       responses:
         '200':
@@ -1455,7 +1491,8 @@ paths:
       description: Get responded supplier ID and names for the given question.
       tags:
         - View Responses 
-        - Evidence Event Respond
+        - Evidence Event Response
+      summary: Get Event Document Responses
       operationId: getResponseDocument
       responses:
         '200':
@@ -1479,7 +1516,6 @@ paths:
       security:
         - OAuth2:
             - buyer
-      summary: Get Response Documents
       
   /evidence/events/{event-id}/questionsets/{question-set-id}/questions/{question-id}/responses/{responder-id}/documents/{document-id}:     
     parameters:
@@ -1490,10 +1526,11 @@ paths:
       - $ref: '#/components/parameters/DocumentId'
       
     get:
-      description: Get responded supplier ID and names for the given question.
+      description: Get supplier ID's and names for that have responded to the given question.
       tags:
         - View Responses 
-        - Evidence Event Respond
+        - Evidence Event Response
+      summary: Retrieve Event Document Response
       operationId: getResponseDocumentDetails
       responses:
         '200':
@@ -1515,14 +1552,13 @@ paths:
       security:
         - OAuth2:
             - buyer
-      summary: Get Question Response Document
       
       
     put:
       tags:
-        - Evidence Event Respond      
+        - Evidence Event Response     
       description: Add/Edit a response to a question as part of a questionset.
-      summary: Event Response
+      summary: Event Document Response
       operationId: updateResponseDocument
       requestBody:
         content:
@@ -1560,7 +1596,8 @@ paths:
     delete:
       description: Delete a response from a question as part of a questionset.
       tags:
-        - Evidence Event Respond
+        - Evidence Event Response
+      summary: Remove Event Document Response
       operationId: deleteResponseDocument
       responses:
         '200':
@@ -1578,8 +1615,7 @@ paths:
       security:
         - OAuth2:
             - buyer
-      summary: Delete Event response
-      
+
       
       
 components:
@@ -1645,50 +1681,45 @@ components:
      
     EventTypes:
       description: >-
-        Generic term for an event put out to the market. There are several types-
+        The types of event that can be created in Evidence Locker. There are several types-
 
-          * EOI - Expression of Interest
-          * RFI -  Request for Information
-          * RFP - Request for Proposal
+          * TBD
       type: array
       items:
         $ref: '#/components/schemas/EventType'
       example: [
-        "EOI",
-        "RFI",
-        "RFP"
+        "TBD"
         ]
         
         
     EventType:
-      title: Event types
+      title: Event Type
       description: >-
-        Generic term for an event put out to the market. There are several types-
-
-          * EOI - Expression of Interest
-          * RFI -  Request for Information
-          * RFP - Request for Proposal
+        Event Type
       type: string
       enum:
-          - EOI
-          - RFI
-          - RFP
+          - TBD 1
+          - TBD 2
+          - TBD 3
           
     Event:
       description: >-
-        Generic term for an event put out to the market. Each is an optional procurement step in the procurement process. This casll shows the current status of each in the procurement process.
+        An Event contains a group of Questions in Questionsets put out to the market. Responders will be invited to answer all the questions prior to evaluation.
       type: array
       items:
         type: object
         properties:
-          projectID: 
-            type: string
-            example: 00002468
-            description: project_1055 mapped to CaT (project ID) 00002468
+          eventType: 
+            $ref: '#/components/schemas/EventType'
           event-id: 
             type: string
             example: 00013579
-            description: itt_2468 mapped to CaT (event-id) 00013579 
+            description: ID of the event with Evidenced Locker
+            readOnly: true
+          eventName:
+            type: string
+          eventDescription:
+            type: string
             
     
     Language:
@@ -1711,21 +1742,9 @@ components:
           readOnly: true
         translation:
           type: string
+        descriptionTranslation:
+          type: string
           
-                         
-    EvalCriteria:
-      description: >-
-        Details of an Evaluation type. This is known as an Envelope or Criterion
-      type: object
-      properties:
-          EvaluationCriteriaId: 
-            type: string
-            readOnly: true
-          title: 
-            type: string          
-          description: 
-            type: string  
-            
           
     QuestionType:
       $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/OCDS/OCDS_CodeLists_Ext.yaml#/components/schemas/DataType'
