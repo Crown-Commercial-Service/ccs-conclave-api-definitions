@@ -1,0 +1,101 @@
+openapi: 3.0.0
+info:
+  title: CCS Conversations Service
+  description: This CCS Conversations Service API.
+  termsOfService: 'http://api.crowncommercial.gov.uk/terms/'
+  contact:
+    email: apiteam@crowncommercial.gov.uk
+  license:
+    name: Open Government Licence 3.0
+    url: 'https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/'
+  version: 1.0.5
+servers:
+  - url: /
+tags:
+  - name: ConversationService
+    description: 'Everything about SecurityService '
+    externalDocs:
+      description: Find out more
+      url: 'http://apis.crowncommercial.gov.uk'
+paths:
+
+  /conversations/:     
+    get:
+      description: Get supplier ID's and names for that have responded to the given question.
+      tags:
+        - Conversation Service
+      summary: Retrieve Event Document Response
+      operationId: getConversations
+      responses:
+        '200':
+          description: ok
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/Document'
+        '401':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
+        '403':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/403Forbidden'
+        '429':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/429TooManyRequests'
+        '500':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/500InternalServerError'
+        '502':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/502BadGateway'
+      security:
+        - OAuth2:
+            - buyer
+            
+  /conversations/{conversation-id}:     
+    parameters:
+      - $ref: '#/components/parameters/ConversationId'
+      
+    get:
+      description: Get supplier ID's and names for that have responded to the given question.
+      tags:
+        - Conversation Service
+      summary: Retrieve Event Document Response
+      operationId: getConversation
+      responses:
+        '200':
+          description: ok
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/Document'
+        '401':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
+        '403':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/403Forbidden'
+        '429':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/429TooManyRequests'
+        '500':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/500InternalServerError'
+        '502':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/502BadGateway'
+      security:
+        - OAuth2:
+            - buyer
+            
+components:
+  parameters:
+     ConversationId:
+      name: conversation-id
+      in: path
+      required: true
+      description: conversation ID
+      schema:
+        $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Schema.yaml#/components/schemas/GenericId'
+        
+  schemas:
+    EventType:
+      title: Event Type
+      description: >-
+        Event Type
+      type: string
+      enum:
+          - TBD 1
+          - TBD 2
+          - TBD 3
+    lse
