@@ -32,7 +32,9 @@ paths:
           content:
             application/vnd.api+json:
               schema:
-                $ref: '#/components/schemas/Document'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Notification'
         '401':
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
         '403':
@@ -43,27 +45,24 @@ paths:
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/500InternalServerError'
         '502':
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/502BadGateway'
-      security:
-        - OAuth2:
-            - buyer
-            
-  /notifications/{notification-id}:     
-    parameters:
-      - $ref: '#/components/parameters/NotificationId'
-      
-    get:
-      description: Get supplier ID's and names for that have responded to the given question.
+
+    post:
+      description: Creates a new Event for the Procurement Project.
       tags:
-        - Notifications Service 
-      summary: Retrieve Event Document Response
-      operationId: getNotification
+         - Notifications Service
+      operationId: createNotification
+      requestBody:
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: '#/components/schemas/Notification'
       responses:
         '200':
           description: ok
           content:
             application/vnd.api+json:
               schema:
-                $ref: '#/components/schemas/Document'
+                $ref: '#/components/parameters/NotificationId'
         '401':
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
         '403':
@@ -74,9 +73,40 @@ paths:
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/500InternalServerError'
         '502':
           $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/502BadGateway'
-      security:
-        - OAuth2:
-            - buyer
+      
+            
+  /notifications/{notification-id}:     
+    parameters:
+      - $ref: '#/components/parameters/NotificationId'
+    patch:
+      description: Allows the recipient of the notification to update its status.
+      tags:
+        - Notifications Service 
+      summary: Retrieve Event Document Response
+      operationId: updateNotification
+      requestBody:
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: '#/components/schemas/Notification'
+      responses:
+        '200':
+          description: ok
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+        '401':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
+        '403':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/403Forbidden'
+        '429':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/429TooManyRequests'
+        '500':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/500InternalServerError'
+        '502':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/502BadGateway'
+
             
 components:
   parameters:
@@ -87,15 +117,68 @@ components:
       description: Notification ID
       schema:
         $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Schema.yaml#/components/schemas/GenericId'
-        
+           
   schemas:
-    EventType:
-      title: Event Type
+    Notification:
+      title: Notification
       description: >-
-        Event Type
-      type: string
-      enum:
-          - TBD 1
-          - TBD 2
-          - TBD 3
-    lse
+        Details of a Notification (Internal, Email, SMS, ....)
+      type: object
+      properties:
+        Channel:
+          type: string
+          nullable: true
+          enum:
+          - Email
+          - SMS
+          - Letter
+          - Internal
+        Template:
+          type: string
+          nullable: true
+        TemplateData:
+          nullable: true
+          type: array
+          items:
+            type: object
+            properties:
+                key:
+                  type: string
+                value:
+                    type: string
+        SourceSystem:
+          type: string
+          readOnly: true
+        NotificationText:
+          type: string
+          nullable: false
+        EffectiveFrom:
+          type: string
+          format: date
+          nullable: false
+        EffectiveTo:
+          type: string
+          format: date
+          nullable: true
+        State:
+          type: string
+          readOnly: true
+          enum:
+          - Accepted
+          - Sent
+          - Read
+          - Actioned
+
+          
+    NotificationSummary:
+      title: Notification Summary
+      description: >-
+        Summary details of a Notification (Internal, Email, SMS, ....)
+      type: object
+      properties:
+        Name:
+          type: string
+          nullable: true
+        Type:
+          type: string
+          nullable: true
