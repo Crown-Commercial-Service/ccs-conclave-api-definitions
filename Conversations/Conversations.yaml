@@ -1,0 +1,386 @@
+openapi: 3.0.0
+info:
+  title: CCS Conversations Service
+  description: This CCS Conversations Service API.
+  termsOfService: 'http://api.crowncommercial.gov.uk/terms/'
+  contact:
+    email: apiteam@crowncommercial.gov.uk
+  license:
+    name: Open Government Licence 3.0
+    url: 'https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/'
+  version: 1.0.5
+servers:
+  - url: /
+tags:
+  - name: Conversation Service
+    description: 'Everything about SecurityService '
+    externalDocs:
+      description: Find out more
+      url: 'http://apis.crowncommercial.gov.uk'
+paths:
+
+  /conversations/:     
+    get:
+      description: Get a list of conversations for which the user is a party and meet the filter criteria.
+      tags:
+        - Conversation Service
+      summary: Get my Conversations 
+      operationId: getConversations
+      responses:
+        '200':
+          description: ok
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/ConversationSummary'
+        '401':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
+        '403':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/403Forbidden'
+        '429':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/429TooManyRequests'
+        '500':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/500InternalServerError'
+        '502':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/502BadGateway'
+    post:
+      description: Creates a new conversation between the user and at least one other party.
+      tags:
+         - Conversation Service
+      operationId: createConversation
+      summary: Create Conversation.
+      requestBody:
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: '#/components/schemas/ConversationSummary'
+      responses:
+        '200':
+          description: ok
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/parameters/ConversationId'
+        '401':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
+        '403':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/403Forbidden'
+        '429':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/429TooManyRequests'
+        '500':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/500InternalServerError'
+        '502':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/502BadGateway'
+      
+            
+  /conversations/{conversation-id}:     
+    parameters:
+      - $ref: '#/components/parameters/ConversationId'
+      
+    get:
+      description: Get supplier ID's and names for that have responded to the given question.
+      tags:
+        - Conversation Service
+      summary: Get Conversation Details
+      operationId: getConversation
+      responses:
+        '200':
+          description: ok
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/Conversation'
+        '401':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
+        '403':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/403Forbidden'
+        '429':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/429TooManyRequests'
+        '500':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/500InternalServerError'
+        '502':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/502BadGateway'
+
+  /conversations/{conversation-id}/parties/{user-id}:     
+    parameters:
+      - $ref: '#/components/parameters/ConversationId'
+      - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Params.yaml#/components/parameters/UserParam'
+    get:
+      description: Get supplier ID's and names for that have responded to the given question.
+      tags:
+        - Conversation Service
+      summary: Get details of a party in the conversation.
+      operationId: getParty
+      responses:
+        '200':
+          description: ok
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/Party'
+        '401':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
+        '403':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/403Forbidden'
+        '429':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/429TooManyRequests'
+        '500':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/500InternalServerError'
+        '502':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/502BadGateway'
+    
+ 
+    put:
+      description: Add a party to a conversation.
+      tags:
+        - Conversation Service
+      operationId: AddParty
+      responses:
+        '200':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/200Success'
+        '401':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
+        '403':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/403Forbidden'
+        '429':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/429TooManyRequests'
+        '500':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/500InternalServerError'
+        '502':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/502BadGateway'
+
+      summary: Add Party
+      
+  /conversations/{conversation-id}/messages:     
+    parameters:
+      - $ref: '#/components/parameters/ConversationId'
+    get:
+      description: Gets Messages within a Conversation.
+      tags:
+        - Conversation Service
+      summary: Get Messages.
+      operationId: getMessages
+      responses:
+        '200':
+          description: ok
+          content:
+            application/vnd.api+json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Message'
+        '401':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
+        '403':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/403Forbidden'
+        '429':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/429TooManyRequests'
+        '500':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/500InternalServerError'
+        '502':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/502BadGateway'
+          
+    post:
+      description: Add a message to a conversation.
+      tags:
+         - Conversation Service
+      operationId: AddMessage
+      summary: Add Message
+      requestBody:
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: '#/components/schemas/Message'
+      responses:
+        '200':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/200Success'
+        '401':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
+        '403':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/403Forbidden'
+        '429':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/429TooManyRequests'
+        '500':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/500InternalServerError'
+        '502':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/502BadGateway'
+
+
+      
+  /conversations/{conversation-id}/messages/{message-id}/read/{user-id}:     
+    parameters:
+      - $ref: '#/components/parameters/ConversationId'
+      - $ref: '#/components/parameters/MessageId'
+      - $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Params.yaml#/components/parameters/UserParam'
+    put:
+      description: Mark Message as Read
+      tags:
+        - Conversation Service
+      operationId: MarkMessageRead
+      responses:
+        '200':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/200Success'
+        '401':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/401Unauthorized'
+        '403':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/403Forbidden'
+        '429':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/429TooManyRequests'
+        '500':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/500InternalServerError'
+        '502':
+          $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Responses.yaml#/components/responses/502BadGateway'
+      summary: Acknowledge Message
+            
+            
+components:
+  parameters:
+    ConversationId:
+      name: conversation-id
+      in: path
+      required: true
+      description: Conversation ID
+      schema:
+        $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Schema.yaml#/components/schemas/GenericId'
+    MessageId:
+      name: message-id
+      in: path
+      required: true
+      description: Message ID
+      schema:
+        $ref: 'https://raw.githubusercontent.com/Crown-Commercial-Service/ccs-api-definitions-common/main/CCS_OpenAPI_Standards/CCS_Standard_API_Schema.yaml#/components/schemas/GenericId'
+          
+  schemas:
+    Conversation:
+      title: Conversation
+      description: >-
+        Details of a Conversation
+      type: object
+      properties:
+        ConversationType:
+          $ref: '#/components/schemas/ConversationType'
+        Parties:
+          type: array
+          items:
+            $ref: '#/components/schemas/Party'
+        Messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+        MetaData:
+          type: array
+          items:
+            $ref: '#/components/schemas/MetaDatum'
+        SourceSystem:
+          type: string
+          readOnly: true
+        Started:
+          type: string
+          format: date
+          readOnly: true
+        LastMessage:
+          type: string
+          format: date
+          readOnly: true
+          
+    ConversationSummary:
+      title: Conversation Summary
+      description: >-
+        Summary details of a Notification (Internal, Email, SMS, ....)
+      type: object
+      properties:
+        ConversationType:
+          $ref: '#/components/schemas/ConversationType'
+        Parties:
+          type: array
+          items:
+            $ref: '#/components/schemas/Party'
+        MetaData:
+          type: array
+          items:
+            $ref: '#/components/schemas/MetaDatum'
+        Started:
+          type: string
+          format: date
+          nullable: false
+          readOnly: true
+        LastMessage:
+          type: string
+          format: date
+          nullable: true
+          readOnly: true
+          
+    ConversationType:
+      type: string
+      nullable: true
+      enum:
+        - 1To1
+        - 1ToMany
+        - ManyToMany
+          
+    Party:
+      type: object
+      properties:
+        PartyId:
+          type: string
+        PartyName:
+          type: string
+          nullable: true
+        PartyOrgId:
+          type: string
+          nullable: true
+        PartyOrgName:
+          type: string
+          nullable: true
+        Initiator:
+          type: boolean
+          readOnly: true
+        FirstMessageID:
+          type: string
+          
+    Message:
+      type: object
+      properties:
+          MessageId:
+            type: string
+            readOnly: true
+          SendingParty:
+            type: string
+            readOnly: true
+          MessageText:
+            type: string
+          MessageDate:
+            type: string
+            format: date-time
+            readOnly: true
+          ReadStates:
+            type: array
+            items:
+              $ref: '#/components/schemas/ReadState'
+            readOnly: true
+          
+    MetaDatum:
+      type: object
+      properties:
+        Key:
+          type: string
+        MetaType:
+          type: string
+          enum:
+              - type A
+              - type B
+              - type C 
+        Value:
+          type: string
+          
+    ReadState:
+      type: object
+      properties:
+        party:
+          type: string
+          readOnly: true
+        state:
+          type: string
+          enum:
+            - Unread
+            - Read
